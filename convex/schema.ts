@@ -7,14 +7,19 @@ export default defineSchema({
     email: v.string(),
     image: v.optional(v.string()),
     status: v.optional(v.string()),
-  }).index("by_email", ["email"]),
+  })
+    .index("by_email", ["email"])
+    .searchIndex("search_users", {
+      searchField: "name",
+      filterFields: ["email"],
+    }),
 
   contacts: defineTable({
     userId: v.id("users"),
     contactId: v.id("users"),
   })
-  .index("by_userId", ["userId"])
-  .index("by_pair", ["userId", "contactId"]),
+    .index("by_userId", ["userId"])
+    .index("by_pair", ["userId", "contactId"]),
 
   messages: defineTable({
     senderId: v.id("users"),
@@ -23,6 +28,10 @@ export default defineSchema({
     seen: v.boolean(),
     sentAt: v.number(),
   })
-  .index("by_pair", ["senderId", "receiverId"])
-  .index("by_receiver", ["receiverId"]),
+    .index("by_pair", ["senderId", "receiverId"])
+    .index("by_receiver", ["receiverId"])
+    .searchIndex("search_messages", {
+      searchField: "body",
+      filterFields: ["senderId", "receiverId"],
+    }),
 })
