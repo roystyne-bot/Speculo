@@ -11,8 +11,8 @@ export const metadata: Metadata = {
 
 export default function AuthLayout({ children }: {children: React.ReactNode}) {
   return (
-    <div className="font-mono min-h-screen flex items-center justify-center">
-        {/*Go back button*/}
+    <div className="font-sans min-h-screen bg-onyx-light flex items-center justify-center">
+        
         <div className="absolute top-5 left-5">
            <Link href="/"
             className={buttonVariants({ variant: 'secondary' })}
@@ -22,7 +22,7 @@ export default function AuthLayout({ children }: {children: React.ReactNode}) {
            </Link>
         </div>
 
-        {/*Children rendering(sign-up form)*/}
+        
         <div className="w-full max-w-md mx-auto">
             {children}
         </div>

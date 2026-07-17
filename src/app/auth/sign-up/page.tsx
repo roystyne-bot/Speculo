@@ -4,43 +4,22 @@ import { useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
 import { signUpSchema } from "@/app/schemas/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Field,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { authClient } from "@/lib/auth-client";
+import { cn } from "@/lib/utils";
 import z from "zod";
 import toast from "react-hot-toast";
 import { useState, useTransition } from "react";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
-
-
-
+import { Eye, EyeOff, Loader2, AlertCircle } from "lucide-react";
 
 export default function SignUpPage() {
   const [isPending, startTransition] = useTransition();
   const [showPassword, setShowPassword] = useState(false);
-
   const router = useRouter();
 
-  const form = useForm({
+  const form = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      password: "",
-    },
+    defaultValues: { name: "", email: "", password: "" },
+    mode: "onChange", // validate on every keystroke
   });
 
   function onSubmit(data: z.infer<typeof signUpSchema>) {
@@ -49,119 +28,243 @@ export default function SignUpPage() {
         email: data.email,
         password: data.password,
         name: data.name,
-        fetchOptions: {
-          onSuccess: () => {
-            toast.success("Account created successfully");
-            router.push("/auth/login");
-          },
-          onError: () => {
-            toast.error("Failed to create account");
-          },
-        },
       });
-      console.log("Result:", result);
-      console.log("Error:", error);
+      if (result) {
+        toast.success("Account created! Redirecting…");
+        router.push("/auth/login");
+      } else {
+        toast.error(error?.message ?? "Something went wrong.");
+      }
     });
   }
 
   return (
-    <div className="font-mono">
-      <Card>
-        <CardHeader>
-          <CardTitle>Sign up</CardTitle>
-          <CardDescription>Create an account to get started</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form
-            onSubmit={form.handleSubmit(onSubmit, (errors) =>
-              console.log("Validation errors:", errors),
-            )}
-          >
-            <FieldGroup>
+    <div className="min-h-screen flex items-center justify-center px-4 py-12">
+
+      
+      <div className="w-full max-w-[440px]">
+
+       
+        <div className="flex items-center gap-2.5 mb-8 justify-center">
+          <div className="w-2.5 h-2.5  bg-spring animate-spin" />
+          <span className="text-white font-bold text-lg tracking-tight">Speculo</span>
+        </div>
+
+        {/* Card body */}
+        <div className="bg-[#151820] border border-[#2A3045] rounded-2xl overflow-hidden">
+
+          {/* Accent bar */}
+          
+          <div className="p-8">
+
+          
+            <div className="mb-7">
+              <h1 className="text-xl font-bold text-[#E8EDF8] tracking-tight mb-1.5">
+                Create your account
+              </h1>
+              <p className="text-[13px] text-[#6B7899]">
+                Start practising interviews with AI today.
+              </p>
+            </div>
+
+            {/* Form */}
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="flex flex-col gap-4"
+              noValidate
+            >
+
+              {/* ── Full name ── */}
               <Controller
                 name="name"
                 control={form.control}
                 render={({ field, fieldState }) => (
-                  <Field>
-                    <FieldLabel>FullName</FieldLabel>
-                    <Input
-                      aria-invalid={fieldState.invalid}
-                      placeholder="Coldy Daroy"
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-[10px] font-mono uppercase tracking-widest text-[#6B7899]">
+                      Full name
+                    </label>
+                    <input
                       {...field}
+                      placeholder="Coldy Daroy"
+                      autoComplete="name"
+                      className={cn(
+                        "w-full bg-[#0F1115] border rounded-xl px-4 py-3",
+                        "text-[14px] text-[#E8EDF8] placeholder:text-[#3A4560]",
+                        "outline-none transition-colors duration-150",
+                        fieldState.invalid
+                          ? "border-red-500 focus:border-red-400"
+                          : "border-gray-800 focus:border-spring"
+                      )}
                     />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
+                    {fieldState.error && (
+                      <p className="flex items-center gap-1.5 text-[11px] text-red-400 font-mono">
+                        <AlertCircle size={11} />
+                        {fieldState.error.message}
+                      </p>
                     )}
-                  </Field>
+                  </div>
                 )}
               />
+
+              {/* ── Email ── */}
               <Controller
                 name="email"
                 control={form.control}
                 render={({ field, fieldState }) => (
-                  <Field>
-                    <FieldLabel>Email</FieldLabel>
-                    <Input
-                      aria-invalid={fieldState.invalid}
-                      placeholder="coldy.daroy@example.com"
-                      type="email"
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-[10px] font-mono uppercase tracking-widest text-[#6B7899]">
+                      Email address
+                    </label>
+                    <input
                       {...field}
+                      type="email"
+                      placeholder="coldy@example.com"
+                      autoComplete="email"
+                      className={cn(
+                        "w-full bg-[#0F1115] border rounded-xl px-4 py-3",
+                        "text-[14px] text-[#E8EDF8] placeholder:text-[#3A4560]",
+                        "outline-none transition-colors duration-150",
+                        fieldState.invalid
+                          ? "border-red-500 focus:border-red-400"
+                          : "border-gray-800 focus:border-spring"
+                      )}
                     />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
+                    {fieldState.error && (
+                      <p className="flex items-center gap-1.5 text-[11px] text-red-400 font-mono">
+                        <AlertCircle size={11} />
+                        {fieldState.error.message}
+                      </p>
                     )}
-                  </Field>
+                  </div>
                 )}
               />
+
+              {/* ── Password ── */}
               <Controller
                 name="password"
                 control={form.control}
                 render={({ field, fieldState }) => (
-                  <Field>
-                    <FieldLabel>Password</FieldLabel>
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-[10px] font-mono uppercase tracking-widest text-[#6B7899]">
+                      Password
+                    </label>
                     <div className="relative">
-                      <Input
-                        aria-invalid={fieldState.invalid}
-                        placeholder="••••••••"
+                      <input
                         {...field}
                         type={showPassword ? "text" : "password"}
-                        className="relative"
+                        placeholder="cold@safari23"
+                        autoComplete="new-password"
+                        className={cn(
+                          "w-full bg-[#0F1115] border rounded-xl px-4 py-3 pr-11",
+                          "text-[14px] text-[#E8EDF8] placeholder:text-[#3A4560]",
+                          "outline-none transition-colors duration-150",
+                          fieldState.invalid
+                            ? "border-red-500 focus:border-red-400"
+                            : "border-gray-800 focus:border-spring"
+                        )}
                       />
-
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-4 top-4 -translate-y-1/2"
+                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#3A4560] hover:text-[#6B7899] transition-colors"
+                        tabIndex={-1}
                       >
-                        {showPassword ? (
-                          <EyeOff size={22} />
-                        ) : (
-                          <Eye size={22} />
-                        )}
+                        {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                       </button>
                     </div>
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
+
+                    {/* Strength indicator */}
+                    {field.value && (
+                      <div className="flex gap-1 mt-0.5">
+                        {[1, 2, 3, 4].map((i) => (
+                          <div
+                            key={i}
+                            className={cn(
+                              "h-[3px] flex-1 rounded-full transition-colors duration-300",
+                              field.value.length >= i * 3
+                                ? i <= 1 ? "bg-red-500"
+                                : i <= 2 ? "bg-amber-400"
+                                : i <= 3 ? "bg-[#2FDD79]/70"
+                                : "bg-[#2FDD79]"
+                                : "bg-[#2A3045]"
+                            )}
+                          />
+                        ))}
+                      </div>
                     )}
-                  </Field>
+
+                    {fieldState.error && (
+                      <p className="flex items-center gap-1.5 text-[11px] text-red-400 font-mono">
+                        <AlertCircle size={11} />
+                        {fieldState.error.message}
+                      </p>
+                    )}
+                  </div>
                 )}
               />
-              <Button
-               disabled={isPending}
-               className="bg-blue-600">
+
+              {/* ── Submit ── */}
+              <button
+                type="submit"
+                disabled={isPending}
+                className={cn(
+                  "w-full mt-2 py-3 rounded-xl",
+                  "bg-[#2FDD79] hover:bg-[#1AAA55] text-[#0F1115]",
+                  "text-[14px] font-bold tracking-tight",
+                  "transition-all duration-200 hover:-translate-y-px",
+                  "flex items-center justify-center gap-2",
+                  "disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+                )}
+              >
                 {isPending ? (
                   <>
                     <Loader2 className="animate-spin size-4" />
-                    <span>Creating account... </span>
+                    Creating account…
                   </>
                 ) : (
-                  "Sign up"
+                  "Create account →"
                 )}
-              </Button>
-            </FieldGroup>
-          </form>
-        </CardContent>
-      </Card>
+              </button>
+
+            </form>
+
+            {/* Divider */}
+            <div className="flex items-center gap-3 my-6">
+              <div className="flex-1 h-px bg-onyx-light" />
+              <span className="text-[10px] font-mono text-[#3A4560] uppercase tracking-widest">
+                or
+              </span>
+              <div className="flex-1 h-px bg-[#2A3045]" />
+            </div>
+
+            {/* Sign in link */}
+            <p className="text-center text-[12px] text-gray-500 font-mono">
+              Already have an account?{" "}
+              <a
+                href="/auth/login"
+                className="text-spring hover:text-[#E8EDF8] transition-colors font-semibold"
+              >
+                Sign in
+              </a>
+            </p>
+
+          </div>
+        </div>
+
+        {/* Bottom note */}
+        <p className="text-center text-[11px] text-gray-500 font-sans mt-6">
+          By signing up you agree to our{" "}
+          <a href="/terms" className="underline hover:text-shadow-spring-pale transition-colors">
+            terms
+          </a>
+          {" "}and{" "}
+          <a href="/privacy" className="underline hover:text-shadow-spring-pale transition-colors">
+            privacy policy
+          </a>
+          .
+        </p>
+
+      </div>
     </div>
   );
 }

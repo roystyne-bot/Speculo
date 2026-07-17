@@ -3,6 +3,15 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@theme {
+  --color-spring: #2FDD79;
+  --color-spring-pale: #c9f5da;
+  --color-spring-deep: #0F3D22;
+
+  --color-onyx: #0B0C0E;
+  --color-onyx-light: #151619;
+}
+
 /* ── DEFAULT SHADCN PALETTE (commented out — restore if needed) ────────────
 :root {
   --radius: 0.625rem;

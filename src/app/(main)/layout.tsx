@@ -14,7 +14,8 @@ export const metadata: Metadata = {
 export default function SharedLayout({ children }: { children: ReactNode }) {
   return (
     <>
-     <Navbar />
+    <div className="relative top-1"><Navbar /></div>
+     
      <Toaster />
        <main className="flex-1 flex flex-col">
         {children}
