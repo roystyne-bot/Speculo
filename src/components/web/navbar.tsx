@@ -57,7 +57,7 @@ export default function Navbar() {
           ) : (
             <>
               <a
-                href="/auth/sign-in"
+                href="/auth/login"
                 className="px-4 py-2 hidden sm:flex text-gray-400 text-sm font-semibold rounded-lg hover:text-white transition-colors duration-150"
               >
                 Log in
@@ -108,7 +108,7 @@ export default function Navbar() {
           ) : (
             <>
               <a
-                href="/auth/sign-in"
+                href="/auth/login"
                 onClick={() => setMenuOpen(false)}
                 className="px-5 py-3.5 text-sm text-gray-400 tracking-wide hover:bg-spring-pale hover:text-white border-b border-gray-700/50 transition-colors duration-150"
               >

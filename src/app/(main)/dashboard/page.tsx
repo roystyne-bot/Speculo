@@ -36,6 +36,7 @@ export default function DashboardPage() {
 
   const isLoading = sessions === undefined || stats === undefined;
 
+
   return (
     <div className="min-h-screen bg-background px-6 py-10 md:px-10">
       <div className="mx-auto max-w-6xl space-y-8">
@@ -48,9 +49,12 @@ export default function DashboardPage() {
 }
 
 function DashboardHeader() {
+    const userName = useQuery(api.users.getUserName, { authId: "k17f7qdewen2qr5jz2v49bdbz58ahtbh" }) as string | undefined;
+
   return (
     <div className="flex flex-col md:flex-row items-start justify-between gap-4 sm:flex-row sm:items-center">
       <div>
+        <h3>Welcome {userName?.split(' ')[0] || "blood"}</h3>
         <h1 className="font-serif text-3xl font-semibold text-foreground">
           Dashboard
         </h1>

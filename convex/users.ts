@@ -32,3 +32,16 @@ export const getUser = query({
     return user;
   },
 });
+
+export const getUserName = query({
+  args: {
+    authId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_authId", (q) => q.eq("authId", args.authId))
+      .first();
+    return user?.name;
+  },
+});

@@ -19,11 +19,14 @@ export default defineSchema({
 
   //----SESSIONS ----
   // One row per interview attempt
+  // convex/schema.ts — sessions table only, with focusAreas added.
+// Everything else in your schema (users, messages, debriefs) is unchanged.
+
   sessions: defineTable({
-    userId:       v.id("users"),         // who ran the interview
-    role:         v.union(               // target role
+    userId:       v.id("users"),
+    role:         v.union(
                     v.literal("fullstack"),
-                     v.literal("frontend"),
+                    v.literal("frontend"),
                     v.literal("backend"),
                     v.literal("devops"),
                     v.literal("mobile"),
@@ -31,25 +34,26 @@ export default defineSchema({
                     v.literal("systems"),
                     v.literal("cloud"),
                   ),
-    level:        v.union(               // experience level
+    level:        v.union(
                     v.literal("junior"),
                     v.literal("mid"),
                     v.literal("senior"),
                   ),
-    mode:         v.union(               // interview type
+    mode:         v.union(
                     v.literal("behavioral"),
                     v.literal("technical"),
                     v.literal("mixed"),
                   ),
-    status:       v.union(               // lifecycle state
-                    v.literal("setup"),       // not started yet
-                    v.literal("active"),      // interview in progress
-                    v.literal("completed"),   // finished, debrief ready
-                    v.literal("abandoned"),   // user left mid-session
+    status:       v.union(
+                    v.literal("setup"),
+                    v.literal("active"),
+                    v.literal("completed"),
+                    v.literal("abandoned"),
                   ),
-    totalScore:   v.optional(v.number()),    // 0–100, set on completion
-    startedAt:    v.optional(v.number()),    // Date.now() when Q1 submitted
-    completedAt:  v.optional(v.number()),    // Date.now() when last Q submitted
+    focusAreas:   v.optional(v.array(v.string())),  // NEW — tags picked in setup, optional for old rows
+    totalScore:   v.optional(v.number()),
+    startedAt:    v.optional(v.number()),
+    completedAt:  v.optional(v.number()),
     createdAt:    v.number(),
   })
     .index("by_userId", ["userId"])

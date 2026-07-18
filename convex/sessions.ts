@@ -1,5 +1,7 @@
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { mutation, query, QueryCtx, MutationCtx } from "./_generated/server";
+import { Id } from "./_generated/dataModel";
+import { authComponent } from "./auth";
 
 function formatDuration(ms: number | undefined) {
   if (!ms || ms <= 0) return "-";
@@ -8,9 +10,67 @@ function formatDuration(ms: number | undefined) {
   return `${minutes}m ${seconds}s`;
 }
 
+// Used by read-only queries. Does NOT create a row — Convex queries can't
+// write, so if this returns null for a genuinely signed-in user, it means
+// their users row doesn't exist yet (they've never called a mutation that
+// self-heals it — see getOrCreateCurrentUser below).
+async function getCurrentUser(ctx: QueryCtx | MutationCtx) {
+  const identity = await ctx.auth.getUserIdentity();
+  if (!identity) return null;
+
+  return await ctx.db
+    .query("users")
+    .withIndex("by_authId", (q) => q.eq("authId", identity.subject))
+    .unique();
+}
+
+// Used by mutations only. If this is the user's first authenticated write
+// and no users row exists (no sign-up hook currently creates one — see
+// convex/auth.ts), this creates it on the spot from the better-auth
+// component's own user record, then proceeds. Self-healing here means we
+// don't depend on getting the exact hook wiring right in auth.ts.
+async function getOrCreateCurrentUser(ctx: MutationCtx) {
+  const identity = await ctx.auth.getUserIdentity();
+  if (!identity) return null;
+
+  const existing = await ctx.db
+    .query("users")
+    .withIndex("by_authId", (q) => q.eq("authId", identity.subject))
+    .unique();
+  if (existing) return existing;
+
+  const authUser = await authComponent.getAuthUser(ctx);
+  if (!authUser) return null;
+
+  const userId = await ctx.db.insert("users", {
+    authId: identity.subject,
+    name: authUser.name ?? "",
+    email: authUser.email ?? "",
+    image: authUser.image ?? undefined,
+    createdAt: Date.now(),
+  });
+
+  return await ctx.db.get(userId);
+}
+
+// Fetches a session and throws unless it belongs to the current user.
+// Used by every function below that reads or writes a specific session,
+// so a client can never act on a sessionId it doesn't own just by
+// guessing or otherwise obtaining the id.
+async function getOwnedSession(ctx: QueryCtx | MutationCtx, sessionId: Id<"sessions">) {
+  const user = await getCurrentUser(ctx);
+  if (!user) throw new Error("Not authenticated");
+
+  const session = await ctx.db.get(sessionId);
+  if (!session || session.userId !== user._id) {
+    throw new Error("Session not found");
+  }
+
+  return session;
+}
+
 export const createSession = mutation({
   args: {
-    userId: v.id("users"),
     role: v.union(
       v.literal("fullstack"),
       v.literal("frontend"),
@@ -21,29 +81,26 @@ export const createSession = mutation({
       v.literal("systems"),
       v.literal("cloud"),
     ),
-    level: v.union(
-      v.literal("junior"),
-      v.literal("mid"),
-      v.literal("senior"),
-    ),
-    mode: v.union(
-      v.literal("behavioral"),
-      v.literal("technical"),
-      v.literal("mixed"),
-    ),
+    level: v.union(v.literal("junior"), v.literal("mid"), v.literal("senior")),
+    mode: v.union(v.literal("behavioral"), v.literal("technical"), v.literal("mixed")),
+    focusAreas: v.optional(v.array(v.string())),
   },
   handler: async (ctx, args) => {
+    const user = await getOrCreateCurrentUser(ctx);
+    if (!user) {
+      throw new Error("Not authenticated");
+    }
+
     const sessionId = await ctx.db.insert("sessions", {
-      userId: args.userId,
+      userId: user._id,
       role: args.role,
       level: args.level,
       mode: args.mode,
-      status: "setup",        // always starts as setup
-      createdAt: Date.now(),  
-      totalScore: undefined,   
-      startedAt: undefined,    
-      completedAt: undefined,  
+      status: "setup",
+      focusAreas: args.focusAreas && args.focusAreas.length > 0 ? args.focusAreas : undefined,
+      createdAt: Date.now(),
     });
+
     return sessionId;
   },
 });
@@ -53,16 +110,23 @@ export const getSession = query({
     sessionId: v.id("sessions"),
   },
   handler: async (ctx, args) => {
-    return await ctx.db.get(args.sessionId);
+    return await getOwnedSession(ctx, args.sessionId);
   },
 });
 
 export const listRecent = query({
   args: {},
   handler: async (ctx) => {
-    const sessions = await ctx.db.query("sessions").order("desc").collect();
+    const user = await getCurrentUser(ctx);
+    if (!user) return []; // signed out — no data, not an error
 
-    return sessions.slice(0, 10).map((session) => ({
+    const sessions = await ctx.db
+      .query("sessions")
+      .withIndex("by_userId", (q) => q.eq("userId", user._id))
+      .order("desc")
+      .take(10);
+
+    return sessions.map((session) => ({
       _id: session._id,
       role: session.role,
       score: session.totalScore ?? 0,
@@ -80,33 +144,44 @@ export const listRecent = query({
 export const getStats = query({
   args: {},
   handler: async (ctx) => {
-    const sessions = await ctx.db.query("sessions").collect();
-    const completed = sessions.filter((session) => session.status === "completed");
-    const scores = completed
-      .map((session) => session.totalScore ?? 0)
-      .filter((score) => score > 0);
+    const user = await getCurrentUser(ctx);
+    if (!user) return { total: 0, average: 0, best: 0, streak: 0 };
 
-    const total = completed.length;
-    const average = total > 0 ? Math.round(scores.reduce((sum, score) => sum + score, 0) / total) : 0;
-    const best = scores.length > 0 ? Math.max(...scores) : 0;
+    const sessions = await ctx.db
+      .query("sessions")
+      .withIndex("by_userId", (q) => q.eq("userId", user._id))
+      .collect();
 
-    return {
-      total,
-      average,
-      best,
-      streak: completed.length,
-    };
+    const scored = sessions.filter((s) => s.totalScore !== undefined);
+    const total = sessions.length;
+    const average =
+      scored.length > 0
+        ? Math.round(scored.reduce((sum, s) => sum + (s.totalScore ?? 0), 0) / scored.length)
+        : 0;
+    const best = scored.length > 0 ? Math.max(...scored.map((s) => s.totalScore ?? 0)) : 0;
+
+    // Streak logic is a placeholder — needs a real definition (consecutive
+    // calendar days with at least one completed session). Flagging rather
+    // than guessing at "days" math that could be silently wrong.
+    const streak = 0;
+
+    return { total, average, best, streak };
   },
 });
 
-export const listSessionsByUser = query({
-  args: {
-    userId: v.id("users"),
-  },
-  handler: async (ctx, args) => {
+// Renamed intent: this used to take userId as a client-supplied argument,
+// which let any caller pass any user's id and read their full session
+// history. It now always returns the caller's own sessions, no argument
+// needed — remove any client call sites that were passing a userId in.
+export const listMySessions = query({
+  args: {},
+  handler: async (ctx) => {
+    const user = await getCurrentUser(ctx);
+    if (!user) return [];
+
     return await ctx.db
       .query("sessions")
-      .withIndex("by_userId", (q) => q.eq("userId", args.userId))
+      .withIndex("by_userId", (q) => q.eq("userId", user._id))
       .order("desc")
       .collect();
   },
@@ -123,6 +198,7 @@ export const updateSessionStatus = mutation({
     ),
   },
   handler: async (ctx, args) => {
+    await getOwnedSession(ctx, args.sessionId); // throws if not the owner
     await ctx.db.patch(args.sessionId, {
       status: args.status,
     });
@@ -135,6 +211,7 @@ export const completeSession = mutation({
     totalScore: v.number(),
   },
   handler: async (ctx, args) => {
+    await getOwnedSession(ctx, args.sessionId); // throws if not the owner
     await ctx.db.patch(args.sessionId, {
       status: "completed",
       totalScore: args.totalScore,
