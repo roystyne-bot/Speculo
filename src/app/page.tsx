@@ -1,58 +1,164 @@
 "use client";
 
-import Navbar from "@/components/web/navbar"
-import useTransition, { useState } from "react"
+import { useEffect, useState } from "react";
+import { Quicksand } from "next/font/google";
+import { CursorStar } from "./Cursorstar";
+import Navbar from "@/components/web/navbar";
+import RolesCarousel from "@/components/web/RolesCarousel";
+import { Mic } from "lucide-react";
 
-export default function App() {
-  //const [isPending, startTransition] = useTransition();
-  
+const quicksand = Quicksand({ subsets: ["latin"], weight: ["500", "600", "700"] });
+
+export default function LandingPage() {
   return (
-    <div className="flex flex-col relative items-center justify-center min-h-screen bg-[#0F1115] text-white px-6">
-      
-      <div className="fixed top-0 w-full flex justify-center">
-        <Navbar />
-      </div>
-
-     
-      <h4 className="flex items-center justify-center sm:gap-2 gap-1 text-lg sm:text-3xl font-bold tracking-tight text-center">
-        <div className="relative h-2.5 w-2.5 sm:h-3 sm:w-3 z-1 bg-spring animate-spin shrink-0"></div>
-        <span className="text-spring">AI Mocked Interviews</span>
-      </h4>
-
-      
-      <h1 className="text-3xl sm:text-5xl font-bold mt-4 font-mono text-center leading-tight">
-        Practice like the job{" "}
-        <br className="hidden sm:block" />
-        depends on it.{" "}
-        <span className="text-spring">It does.</span>
-      </h1>
-
-      
-      <p className="mt-4 text-base sm:text-lg text-center text-gray-400 max-w-md leading-relaxed">
-        Speculo puts you in front of a relentless AI interviewer.{" "}
-        <span className="block sm:inline mt-1 sm:mt-0">
-          Get scored, get a debrief, get hired.
-        </span>
-      </p>
-
-      <div className="mt-8 flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-        
-         <a href="/auth/sign-up"
-          className="w-full sm:w-auto text-center px-6 py-3 bg-spring rounded-lg
-                     hover:bg-spring-pale transition-colors text-onyx-light
-                     font-semibold text-[15px]"
-         >
-          Get Started
-        </a>
-        
-         <a href="/auth/login"
-          className="w-full sm:w-auto text-center px-6 py-3 border border-gray-700
-                     rounded-lg hover:bg-gray-800 transition-colors text-[15px]"
-         >
-          Sign In
-        </a>
-      </div>
-
+    <div style={{ backgroundColor: "#0F1115" }} className="min-h-screen">
+      <CursorStar />
+      <Navbar />
+      <Hero />
+      <RolesCarousel />
+      {/* ValueSection, CtaBanner, Footer come back once this section is confirmed */}
     </div>
-  )
+  );
+}
+
+// Small recurring accent mark — same star as the cursor, placed statically
+// near the headline so the motif recurs rather than only existing as
+// something that follows your mouse.
+function StarAccent({ className = "" }: { className?: string }) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 14 14" className={className}>
+      <path d="M7 0 L8.4 5.6 L14 7 L8.4 8.4 L7 14 L5.6 8.4 L0 7 L5.6 5.6 Z" fill="#2FDD79" />
+    </svg>
+  );
+}
+
+function Hero() {
+  return (
+    <section
+      className="relative px-6 pt-32 pb-24 md:px-10 md:pt-40 overflow-hidden"
+      style={{
+        background:
+          "radial-gradient(ellipse 900px 500px at 30% 0%, rgba(47,221,121,0.16), transparent 60%), radial-gradient(ellipse 700px 500px at 85% 15%, rgba(91,127,255,0.12), transparent 60%), #0F1115",
+      }}
+    >
+      {/* Faint grid texture — gives the hero depth without needing a photo */}
+      <div
+        className="absolute inset-0 opacity-[0.07] pointer-events-none"
+        style={{
+          backgroundImage:
+            "linear-gradient(to right, #ffffff 1px, transparent 1px), linear-gradient(to bottom, #ffffff 1px, transparent 1px)",
+          backgroundSize: "48px 48px",
+        }}
+      />
+
+      <div className="relative mx-auto max-w-5xl grid md:grid-cols-2 gap-12 items-center">
+        <div className="relative">
+          <StarAccent className="absolute -top-6 left-1 opacity-80" />
+          <p className="text-xs uppercase tracking-wide" style={{ color: "#2FDD79" }}>
+            AI mock interviews
+          </p>
+          <h1
+            className={`${quicksand.className} mt-3 text-4xl md:text-5xl font-semibold leading-tight`}
+            style={{ color: "#F5F7FA" }}
+          >
+            Practice the interview before it counts.
+          </h1>
+          <StarAccent className="absolute top-2 right-8 opacity-50" />
+          <p className="mt-4 text-base leading-relaxed" style={{ color: "#9AA0AC" }}>
+            Speculo runs a real interview with you — asks the questions, listens to your
+            answers, and scores you the way a real interviewer would.
+          </p>
+          <div className="mt-8 flex gap-3">
+            <a
+              href="/auth/sign-up"
+              className="px-5 py-2.5 text-sm font-semibold rounded-full transition-opacity duration-150 hover:opacity-90"
+              style={{ backgroundColor: "#2FDD79", color: "#0A2E17" }}
+            >
+              Start practicing
+            </a>
+            <a
+              href="/auth/sign-in"
+              className="px-5 py-2.5 text-sm rounded-full transition-colors duration-150"
+              style={{ border: "1px solid #34383F", color: "#D6D9DE" }}
+            >
+              Log in
+            </a>
+          </div>
+        </div>
+
+        <HeroDemo />
+      </div>
+    </section>
+  );
+}
+
+function HeroDemo() {
+  const [stage, setStage] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => setStage((s) => (s + 1) % 3), 2600);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div
+      className="rounded-3xl overflow-hidden"
+      style={{ border: "1px solid #2A2D33", backgroundColor: "#15181D" }}
+    >
+      <div
+        className="flex items-center gap-2 px-4 py-2.5"
+        style={{ backgroundColor: "#0F1115", borderBottom: "1px solid #2A2D33" }}
+      >
+        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: "#2A2D33" }} />
+        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: "#2A2D33" }} />
+        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: "#2A2D33" }} />
+        <p className="ml-2 text-[11px] font-mono" style={{ color: "#6B7078" }}>
+          speculo.app/interview/session
+        </p>
+      </div>
+
+      <div className="h-64 p-6 relative">
+        <div className="absolute inset-6 transition-opacity duration-500" style={{ opacity: stage === 0 ? 1 : 0 }}>
+          <p className="text-[10px] uppercase tracking-wide" style={{ color: "#2FDD79" }}>
+            Behavioral · Teamwork
+          </p>
+          <p className="mt-2 text-sm leading-relaxed" style={{ color: "#F5F7FA" }}>
+            Tell me about a time you disagreed with a teammate. How did you handle it?
+          </p>
+        </div>
+
+        <div className="absolute inset-6 transition-opacity duration-500" style={{ opacity: stage === 1 ? 1 : 0 }}>
+          <p className="text-[10px] uppercase tracking-wide" style={{ color: "#2FDD79" }}>
+            Your answer
+          </p>
+          <p className="mt-2 text-sm leading-relaxed" style={{ color: "#B8BCC4" }}>
+            I proposed we each list our concerns, then found where they overlapped...
+          </p>
+          <div className="mt-4 flex items-center gap-1.5 text-xs" style={{ color: "#5B7FFF" }}>
+            <Mic size={13} /> Recording
+          </div>
+        </div>
+
+        <div className="absolute inset-6 transition-opacity duration-500" style={{ opacity: stage === 2 ? 1 : 0 }}>
+          <div className="flex gap-6">
+            <ScoreItem label="Relevance" value={8} />
+            <ScoreItem label="Clarity" value={7} />
+            <ScoreItem label="Depth" value={7} />
+          </div>
+          <p className="mt-4 text-xs leading-relaxed" style={{ color: "#9AA0AC" }}>
+            Clear example with a concrete resolution. Could go deeper on the outcome.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ScoreItem({ label, value }: { label: string; value: number }) {
+  return (
+    <div>
+      <p className="text-[10px]" style={{ color: "#6B7078" }}>{label}</p>
+      <p className="text-sm font-semibold" style={{ color: "#F5F7FA" }}>{value}/10</p>
+    </div>
+  );
 }

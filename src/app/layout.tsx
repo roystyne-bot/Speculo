@@ -36,7 +36,7 @@ export default function RootLayout({
         geistSans.variable,
         geistMono.variable,
         inter.variable,
-        "font-sans"
+        "font-sans",
       )}
     >
       <body className="min-h-full flex flex-col">
@@ -46,9 +46,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <ConvexClientProvider>
-            {children}
-          </ConvexClientProvider>
+          <ConvexClientProvider>{children}</ConvexClientProvider>
         </ThemeProvider>
       </body>
     </html>

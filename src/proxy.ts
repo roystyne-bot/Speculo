@@ -10,9 +10,6 @@ export function proxy(request: NextRequest) {
   const sessionCookie = getSessionCookie(request);
   const { pathname } = request.nextUrl;
 
-  // TEMPORARY — remove once this is confirmed working.
-  console.log("[proxy]", pathname, "cookie found:", !!sessionCookie);
-
   // Signed-in users shouldn't land back on the marketing/landing page.
   if (pathname === "/" && sessionCookie) {
     return NextResponse.redirect(new URL("/interview/setup", request.url));
@@ -22,7 +19,7 @@ export function proxy(request: NextRequest) {
   // letting them view/interact with pages that assume a logged-in user.
   const isProtected = pathname.startsWith("/interview") || pathname.startsWith("/dashboard");
   if (isProtected && !sessionCookie) {
-    return NextResponse.redirect(new URL("/auth/sign-in", request.url));
+    return NextResponse.redirect(new URL("/auth/login", request.url));
   }
 
   return NextResponse.next();

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 
@@ -12,8 +12,18 @@ const NavLinks = [
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const { data: session, isPending } = authClient.useSession();
   const isAuthenticated = !!session;
+
+  // Transparent at the top of the page, solidifies once scrolled past the
+  // hero — matches the floating-nav pattern from the reference site.
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const handleLogout = async () => {
     await authClient.signOut();
@@ -21,11 +31,18 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="w-full max-w-3xl mx-auto relative">
-      <div className="flex py-2 px-4 justify-between items-center border border-gray-700 bg-onyx-light rounded-xl gap-4">
+    <nav className="fixed top-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-3xl z-50">
+      <div
+        className={
+          "flex py-2 px-4 justify-between items-center rounded-xl gap-4 transition-all duration-300 " +
+          (scrolled
+            ? "border border-gray-700 bg-onyx-light shadow-lg"
+            : "border border-transparent bg-transparent")
+        }
+      >
         <a
           href={isAuthenticated ? "/interview/setup" : "/"}
-          className="flex items-center gap-1.5 text-xl font-bold shrink-0"
+          className="flex items-center gap-1.5 text-xl font-bold shrink-0 text-white"
         >
           <div className="w-3.5 h-3.5 rounded-full bg-spring animate-pulse shadow-xl shadow-spring-deep" />
           <span>Speculo</span>
@@ -37,7 +54,7 @@ export default function Navbar() {
               <a
                 key={link.label}
                 href={link.href}
-                className="px-3 py-2 rounded-xl text-gray-500 text-sm hover:bg-spring-pale hover:text-white transition-colors duration-150 tracking-wide"
+                className="px-3 py-2 rounded-xl text-gray-300 text-sm hover:bg-spring-pale hover:text-white transition-colors duration-150 tracking-wide"
               >
                 {link.label.toUpperCase()}
               </a>
@@ -57,8 +74,8 @@ export default function Navbar() {
           ) : (
             <>
               <a
-                href="/auth/login"
-                className="px-4 py-2 hidden sm:flex text-gray-400 text-sm font-semibold rounded-lg hover:text-white transition-colors duration-150"
+                href="/auth/sign-in"
+                className="px-4 py-2 hidden sm:flex text-gray-300 text-sm font-semibold rounded-lg hover:text-white transition-colors duration-150"
               >
                 Log in
               </a>
@@ -73,7 +90,7 @@ export default function Navbar() {
 
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="md:hidden p-2 rounded-lg text-gray-400 hover:bg-gray-800 transition-colors"
+            className="md:hidden p-2 rounded-lg text-gray-300 hover:bg-gray-800 transition-colors"
             aria-label="Toggle menu"
           >
             {menuOpen ? <X size={20} /> : <Menu size={20} />}

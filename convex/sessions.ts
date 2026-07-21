@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { mutation, query, QueryCtx, MutationCtx } from "./_generated/server";
+import { mutation, query, internalQuery, QueryCtx, MutationCtx } from "./_generated/server";
 import { Id } from "./_generated/dataModel";
 import { authComponent } from "./auth";
 
@@ -56,8 +56,10 @@ async function getOrCreateCurrentUser(ctx: MutationCtx) {
 // Fetches a session and throws unless it belongs to the current user.
 // Used by every function below that reads or writes a specific session,
 // so a client can never act on a sessionId it doesn't own just by
-// guessing or otherwise obtaining the id.
-async function getOwnedSession(ctx: QueryCtx | MutationCtx, sessionId: Id<"sessions">) {
+// guessing or otherwise obtaining the id. Exported so messages.ts can
+// reuse it via the internal query below (actions can't call ctx.db
+// directly, so this is the bridge for action-side ownership checks).
+export async function getOwnedSession(ctx: QueryCtx | MutationCtx, sessionId: Id<"sessions">) {
   const user = await getCurrentUser(ctx);
   if (!user) throw new Error("Not authenticated");
 
@@ -68,6 +70,13 @@ async function getOwnedSession(ctx: QueryCtx | MutationCtx, sessionId: Id<"sessi
 
   return session;
 }
+
+// Internal-only — actions call this via ctx.runQuery to verify ownership
+// before doing any Groq calls or writes, since actions have no ctx.db.
+export const _getOwnedSessionForAction = internalQuery({
+  args: { sessionId: v.id("sessions") },
+  handler: async (ctx, args) => getOwnedSession(ctx, args.sessionId),
+});
 
 export const createSession = mutation({
   args: {
