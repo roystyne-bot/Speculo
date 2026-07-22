@@ -42,10 +42,10 @@ export default function Navbar() {
       >
         <a
           href={isAuthenticated ? "/interview/setup" : "/"}
-          className="flex items-center gap-1.5 text-xl font-bold shrink-0 text-white"
+          className="flex items-center gap-0.5 text-xl font-bold shrink-0 text-white"
         >
-          <div className="w-3.5 h-3.5 rounded-full bg-spring animate-pulse shadow-xl shadow-spring-deep" />
-          <span>Speculo</span>
+          <span className="text-spring animate-bounce">S</span>
+          <span>peculo</span>
         </a>
 
         <div className="hidden md:flex gap-1">
@@ -56,7 +56,7 @@ export default function Navbar() {
                 href={link.href}
                 className="px-3 py-2 rounded-xl text-gray-300 text-sm hover:bg-spring-pale hover:text-white transition-colors duration-150 tracking-wide"
               >
-                {link.label.toUpperCase()}
+                {link.label}
               </a>
             ))}
         </div>
@@ -109,7 +109,7 @@ export default function Navbar() {
                   onClick={() => setMenuOpen(false)}
                   className="px-5 py-3.5 text-sm text-gray-400 tracking-wide hover:bg-spring-pale hover:text-white border-b border-gray-700/50 transition-colors duration-150"
                 >
-                  {link.label.toUpperCase()}
+                  {link.label}
                 </a>
               ))}
               <button
@@ -119,7 +119,7 @@ export default function Navbar() {
                 }}
                 className="px-5 py-3.5 text-sm text-gray-400 tracking-wide hover:bg-spring-pale hover:text-white text-left transition-colors duration-150"
               >
-                LOG OUT
+                Log out
               </button>
             </>
           ) : (

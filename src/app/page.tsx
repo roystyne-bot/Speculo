@@ -3,9 +3,12 @@
 import { useEffect, useState } from "react";
 import { Quicksand } from "next/font/google";
 import { CursorStar } from "./Cursorstar";
-import Navbar from "@/components/web/navbar";
-import RolesCarousel from "@/components/web/RolesCarousel";
-import { Mic } from "lucide-react";
+import Navbar from "../components/web/navbar";
+import RolesCarousel from "../components/web/RolesCarousel";
+import TechStackRow from "./Techstackrow";
+import { DottedSurface } from "./Dottedsurface";
+import { Mic, MessagesSquare, Target, TrendingUp } from "lucide-react";
+import FeatureRow from "../components/web/FeatureRow";
 
 const quicksand = Quicksand({ subsets: ["latin"], weight: ["500", "600", "700"] });
 
@@ -16,7 +19,9 @@ export default function LandingPage() {
       <Navbar />
       <Hero />
       <RolesCarousel />
-      {/* ValueSection, CtaBanner, Footer come back once this section is confirmed */}
+      <TechStackRow />
+      <WhySpeculo />
+      {/* CtaBanner, Footer come back once this section is confirmed */}
     </div>
   );
 }
@@ -34,6 +39,7 @@ function StarAccent({ className = "" }: { className?: string }) {
 
 function Hero() {
   return (
+    <>
     <section
       className="relative px-6 pt-32 pb-24 md:px-10 md:pt-40 overflow-hidden"
       style={{
@@ -41,15 +47,8 @@ function Hero() {
           "radial-gradient(ellipse 900px 500px at 30% 0%, rgba(47,221,121,0.16), transparent 60%), radial-gradient(ellipse 700px 500px at 85% 15%, rgba(91,127,255,0.12), transparent 60%), #0F1115",
       }}
     >
-      {/* Faint grid texture — gives the hero depth without needing a photo */}
-      <div
-        className="absolute inset-0 opacity-[0.07] pointer-events-none"
-        style={{
-          backgroundImage:
-            "linear-gradient(to right, #ffffff 1px, transparent 1px), linear-gradient(to bottom, #ffffff 1px, transparent 1px)",
-          backgroundSize: "48px 48px",
-        }}
-      />
+      {/* Animated dotted surface — replaces the flat grid overlay */}
+      <DottedSurface />
 
       <div className="relative mx-auto max-w-5xl grid md:grid-cols-2 gap-12 items-center">
         <div className="relative">
@@ -69,18 +68,18 @@ function Hero() {
             answers, and scores you the way a real interviewer would.
           </p>
           <div className="mt-8 flex gap-3">
-            <a
-              href="/auth/sign-up"
+            
+              <a href="/auth/sign-up"
               className="px-5 py-2.5 text-sm font-semibold rounded-full transition-opacity duration-150 hover:opacity-90"
               style={{ backgroundColor: "#2FDD79", color: "#0A2E17" }}
-            >
+              >
               Start practicing
             </a>
-            <a
-              href="/auth/sign-in"
+            
+              <a href="/auth/sign-in"
               className="px-5 py-2.5 text-sm rounded-full transition-colors duration-150"
               style={{ border: "1px solid #34383F", color: "#D6D9DE" }}
-            >
+              >
               Log in
             </a>
           </div>
@@ -89,6 +88,7 @@ function Hero() {
         <HeroDemo />
       </div>
     </section>
+    </>
   );
 }
 
@@ -109,9 +109,9 @@ function HeroDemo() {
         className="flex items-center gap-2 px-4 py-2.5"
         style={{ backgroundColor: "#0F1115", borderBottom: "1px solid #2A2D33" }}
       >
-        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: "#2A2D33" }} />
-        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: "#2A2D33" }} />
-        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: "#2A2D33" }} />
+        <div className="w-2 h-2 rounded-full bg-red-500"  />
+        <div className="w-2 h-2 rounded-full bg-yellow-500"  />
+        <div className="w-2 h-2 rounded-full bg-green-500"  />
         <p className="ml-2 text-[11px] font-mono" style={{ color: "#6B7078" }}>
           speculo.app/interview/session
         </p>
@@ -160,5 +160,39 @@ function ScoreItem({ label, value }: { label: string; value: number }) {
       <p className="text-[10px]" style={{ color: "#6B7078" }}>{label}</p>
       <p className="text-sm font-semibold" style={{ color: "#F5F7FA" }}>{value}/10</p>
     </div>
+  );
+}
+
+function WhySpeculo() {
+  return (
+    <section className="px-6 md:px-10 py-24" style={{ backgroundColor: "#0F1115" }}>
+      <div className="mx-auto max-w-5xl">
+        <h2
+          className={`${quicksand.className} text-3xl md:text-4xl font-semibold mb-12`}
+          style={{ color: "#F5F7FA" }}
+        >
+          Why Speculo?
+        </h2>
+
+        <div className="flex flex-col gap-8">
+          <FeatureRow
+            title="Real questions, real pressure"
+            description="Speculo generates role-specific interview questions and adapts follow-ups based on your answers, just like a real interviewer would."
+            icon={<MessagesSquare size={80} color="#0A2E17" />}
+          />
+          <FeatureRow
+            title="Built for the role you're targeting"
+            description="Practice sessions are tailored to your exact stack and job title, not generic interview questions."
+            icon={<Target size={80} color="#0A2E17" />}
+            reverse
+          />
+          <FeatureRow
+            title="Track your progress over time"
+            description="Every session is scored and logged, so you can see exactly where you're improving before the real interview."
+            icon={<TrendingUp size={80} color="#0A2E17" />}
+          />
+        </div>
+      </div>
+    </section>
   );
 }
