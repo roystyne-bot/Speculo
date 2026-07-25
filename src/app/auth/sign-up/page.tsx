@@ -10,6 +10,11 @@ import z from "zod";
 import toast from "react-hot-toast";
 import { useState, useTransition } from "react";
 import { Eye, EyeOff, Loader2, AlertCircle } from "lucide-react";
+import { Quicksand } from "next/font/google";
+
+
+const quicksand = Quicksand({ subsets: ["latin"], weight: ["500", "600", "700"] });
+
 
 export default function SignUpPage() {
   const [isPending, startTransition] = useTransition();
@@ -39,19 +44,22 @@ export default function SignUpPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12">
+    <div className={`min-h-screen flex items-center justify-center px-4 py-12 ${quicksand.className}`}>
 
       
       <div className="w-full max-w-[440px]">
 
        
-        <div className="flex items-center gap-2.5 mb-8 justify-center">
-          <div className="w-2.5 h-2.5  bg-spring animate-spin" />
-          <span className="text-white font-bold text-lg tracking-tight">Speculo</span>
+        <div className="flex text-2xl items-center mb-8 justify-center">
+          
+          <span className="text-white italic font-bold font-serif text-3xl tracking-tight">
+            S
+          </span>
+          peculo
         </div>
 
         {/* Card body */}
-        <div className="bg-[#151820] border border-[#2A3045] rounded-2xl overflow-hidden">
+        <div className="bg-onyx-light border border-white/10 rounded-2xl overflow-hidden">
 
           {/* Accent bar */}
           

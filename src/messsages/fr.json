@@ -1,0 +1,61 @@
+{
+  "Navbar": {
+    "roles": "Rôles",
+    "setup": "Configuration",
+    "interview": "Entretien",
+    "debrief": "Bilan",
+    "logIn": "Connexion",
+    "logOut": "Déconnexion",
+    "signUp": "S'inscrire"
+  },
+  "Hero": {
+    "eyebrow": "Entretiens simulés par IA",
+    "headline": "Entraînez-vous avant que ça compte vraiment.",
+    "description": "Speculo mène un véritable entretien avec vous — pose les questions, écoute vos réponses, et vous évalue comme le ferait un vrai recruteur.",
+    "startPracticing": "Commencer à s'entraîner",
+    "logIn": "Connexion",
+    "demoQuestionTag": "Comportemental · Travail d'équipe",
+    "demoQuestion": "Parlez-moi d'une fois où vous n'étiez pas d'accord avec un collègue. Comment avez-vous géré la situation ?",
+    "demoAnswerLabel": "Votre réponse",
+    "demoAnswer": "J'ai proposé que chacun liste ses préoccupations, puis nous avons trouvé les points communs...",
+    "recording": "Enregistrement",
+    "relevance": "Pertinence",
+    "clarity": "Clarté",
+    "depth": "Profondeur",
+    "demoFeedback": "Exemple clair avec une résolution concrète. Pourrait approfondir le résultat obtenu."
+  },
+  "RolesCarousel": {
+    "eyebrow": "Pratiquez par rôle",
+    "headline": "Conçu pour le poste auquel vous postulez.",
+    "startPracticing": "Commencer à s'entraîner",
+    "frontendTitle": "Frontend",
+    "frontendBody": "React, gestion d'état, accessibilité, performance.",
+    "backendTitle": "Backend",
+    "backendBody": "API, bases de données, authentification et fiabilité des systèmes.",
+    "fullstackTitle": "Full-Stack",
+    "fullstackBody": "Responsabilité de bout en bout, du schéma à l'interface.",
+    "devopsTitle": "DevOps",
+    "devopsBody": "CI/CD, infrastructure et stratégie de déploiement.",
+    "mobileTitle": "Mobile",
+    "mobileBody": "Développement d'applications natives et multiplateformes.",
+    "dataTitle": "Données",
+    "dataBody": "Pipelines, modélisation et décisions basées sur les données.",
+    "systemsTitle": "Systèmes",
+    "systemsBody": "Conception bas niveau, performance et architecture.",
+    "cloudTitle": "Cloud",
+    "cloudBody": "Infrastructure évolutive et conception cloud-native."
+  },
+  "TechStackRow": {
+    "builtWith": "Construit avec"
+  },
+  "Footer": {
+    "quote": "Chaque question mérite une vraie réponse — et chaque réponse mérite un retour honnête. C'est tout l'intérêt de s'entraîner avant que ça compte.",
+    "product": "Produit",
+    "home": "Accueil",
+    "signUp": "S'inscrire",
+    "logIn": "Connexion",
+    "resources": "Ressources",
+    "practiceByRole": "Pratiquer par rôle",
+    "rights": "Tous droits réservés."
+  }
+}

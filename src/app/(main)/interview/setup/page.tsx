@@ -5,6 +5,10 @@ import { useRouter } from "next/navigation";
 import { useMutation } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
 import { Check } from "lucide-react";
+import { Quicksand } from "next/font/google";
+
+
+const quicksand = Quicksand({ subsets: ["latin"], weight: ["500", "600", "700"] });
 
 type Role = "fullstack" | "frontend" | "backend" | "devops" | "mobile" | "data" | "systems" | "cloud";
 type Level = "junior" | "mid" | "senior";
@@ -124,9 +128,9 @@ export default function SetupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background px-6 py-12 md:px-10">
+    <div className={`min-h-screen pt-20 bg-background px-6 py-12 md:px-10 ${quicksand.className}`}>
       <div className="mx-auto max-w-2xl">
-        <h1 className="font-serif text-3xl font-semibold text-foreground">
+        <h1 className="text-3xl font-semibold text-foreground">
           Set up your interview
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">

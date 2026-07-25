@@ -57,9 +57,9 @@ export default function DebriefPage() {
   if (!debrief) return null; // generation in flight, nothing to show yet
 
   return (
-    <div className="min-h-screen bg-background px-6 py-12 md:px-10">
+    <div className="min-h-screen pt-20 bg-background px-6 py-12 md:px-10">
       <div className="mx-auto max-w-2xl">
-        <h1 className="font-serif text-3xl font-semibold text-foreground">Debrief</h1>
+        <h1 className="text-3xl font-semibold text-foreground">Debrief</h1>
 
         <div className="mt-6 rounded-xl border border-gray-700 bg-onyx-light p-6 flex items-center justify-between">
           <div>

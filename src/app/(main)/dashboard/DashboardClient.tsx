@@ -14,6 +14,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Quicksand } from "next/font/google";
+
+const quicksand = Quicksand({ subsets: ["latin"], weight: ["600", "700"] });
 
 type Props = {
   preloadedSessions: Preloaded<typeof api.sessions.listRecent>;
@@ -21,7 +24,7 @@ type Props = {
 };
 
 export function DashboardClient({ preloadedSessions, preloadedStats }: Props) {
-  // Resolves instantly with the server-preloaded data on first render —
+  // Resolves instantly with the server-preloaded data on first render
   // never undefined, no loading state needed here. Live-updates after
   // that if the underlying data changes (e.g. a session completes
   // elsewhere), same as a normal useQuery would.
@@ -29,7 +32,7 @@ export function DashboardClient({ preloadedSessions, preloadedStats }: Props) {
   const stats = usePreloadedQuery(preloadedStats);
 
   return (
-    <div className="min-h-screen bg-background px-6 py-10 md:px-10">
+    <div className={`min-h-screen bg-background px-6 py-10 md:px-10 ${quicksand.className}`}>
       <div className="mx-auto max-w-6xl space-y-8">
         <DashboardHeader />
         <StatsRow stats={stats} />
@@ -41,9 +44,9 @@ export function DashboardClient({ preloadedSessions, preloadedStats }: Props) {
 
 function DashboardHeader() {
   return (
-    <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+    <div className="flex flex-col pt-20 items-start justify-between gap-4 sm:flex-row sm:items-center">
       <div>
-        <h1 className="font-serif text-3xl font-semibold text-foreground">Dashboard</h1>
+        <h1 className={`${quicksand.className} text-3xl font-semibold text-foreground`}>Dashboard</h1>
         <p className="mt-1 text-sm text-muted-foreground">
           Track your interview practice and progress.
         </p>
@@ -77,7 +80,7 @@ function StatsRow({
       {items.map((item) => (
         <Card key={item.label} className="border-border bg-card">
           <CardHeader className="pb-2">
-            <CardTitle className="font-serif text-sm font-normal text-muted-foreground">
+            <CardTitle className={`${quicksand.className}text-sm font-normal text-muted-foreground`}>
               {item.label}
             </CardTitle>
           </CardHeader>
@@ -103,7 +106,7 @@ function RecentSessions({ sessions }: { sessions: SessionRow[] }) {
   return (
     <Card className="border-border bg-card">
       <CardHeader>
-        <CardTitle className="font-serif text-lg font-medium text-foreground">
+        <CardTitle className="text-lg font-medium text-foreground">
           Recent interviews
         </CardTitle>
       </CardHeader>

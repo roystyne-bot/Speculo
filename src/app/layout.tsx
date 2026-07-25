@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import { ConvexClientProvider } from "@/app/ConvexClientProvider";
 import { Quicksand } from "next/font/google";
+import { LanguageProvider } from "@/components/web/LanguageProvider";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -13,7 +14,10 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 
-const quicksand = Quicksand({ subsets: ["latin"], weight: ["500", "600", "700"] });
+const quicksand = Quicksand({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+});
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -42,16 +46,11 @@ export default function RootLayout({
         "font-sans",
       )}
     >
-      
       <body className={`${quicksand.className} min-h-full flex flex-col`}>
-        
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <ConvexClientProvider>{children}</ConvexClientProvider>
+        <ThemeProvider>
+          <ConvexClientProvider>
+            <LanguageProvider>{children}</LanguageProvider>
+          </ConvexClientProvider>
         </ThemeProvider>
       </body>
     </html>

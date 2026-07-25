@@ -78,7 +78,7 @@ export default function InterviewSessionPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background px-6 py-12 md:px-10">
+      <div className="min-h-screen pt-20 bg-background px-6 py-12 md:px-10">
         <div className="mx-auto max-w-2xl">
           <div className="h-4 w-32 bg-gray-800 rounded animate-pulse" />
           <div className="mt-6 h-40 rounded-xl border border-gray-700 bg-onyx-light animate-pulse" />
@@ -88,7 +88,7 @@ export default function InterviewSessionPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background px-6 py-12 md:px-10">
+    <div className="min-h-screen pt-20 bg-background px-6 py-12 md:px-10">
       <div className="mx-auto max-w-2xl">
         <p className="text-sm text-gray-500">
           {currentMessage ? `Question ${currentMessage.questionNumber} of ${TOTAL_QUESTIONS}` : "Starting..."}

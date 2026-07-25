@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { action, internalMutation, query } from "./_generated/server";
+import { action, internalMutation, internalQuery, query } from "./_generated/server";
 import { internal, api } from "./_generated/api";
 import { getOwnedSession } from "./sessions";
 import { callGroqJSON } from "./lib/groq";
@@ -25,10 +25,28 @@ export const getDebrief = query({
   handler: async (ctx, args) => {
     await getOwnedSession(ctx, args.sessionId); // throws if not the owner
 
+    // .first() instead of .unique() — defensive against any existing
+    // duplicate rows (from before generateDebrief became idempotent below),
+    // and simply safer going forward: this query should never crash the
+    // page even if something upstream ever misbehaves again.
     return await ctx.db
       .query("debriefs")
       .withIndex("by_sessionId", (q) => q.eq("sessionId", args.sessionId))
-      .unique();
+      .order("desc")
+      .first();
+  },
+});
+
+// Internal — lets the action check for an existing debrief before doing
+// any work, since actions can't use ctx.db directly.
+export const _getExistingDebriefInternal = internalQuery({
+  args: { sessionId: v.id("sessions") },
+  handler: async (ctx, args) => {
+    return await ctx.db
+      .query("debriefs")
+      .withIndex("by_sessionId", (q) => q.eq("sessionId", args.sessionId))
+      .order("desc")
+      .first();
   },
 });
 
@@ -65,6 +83,18 @@ export const generateDebrief = action({
     const session = await ctx.runQuery(internal.sessions._getOwnedSessionForAction, {
       sessionId: args.sessionId,
     });
+
+    // Idempotency guard — if a debrief already exists for this session
+    // (e.g. this action got called twice, which React 18 Strict Mode does
+    // intentionally in dev), return the existing one instead of generating
+    // a second one. This is the actual fix for the duplicate-row bug —
+    // client-side "isGenerating" flags alone can't prevent this race.
+    const existing = await ctx.runQuery(internal.debriefs._getExistingDebriefInternal, {
+      sessionId: args.sessionId,
+    });
+    if (existing) {
+      return { debriefId: existing._id, overallScore: existing.overallScore, grade: existing.grade };
+    }
 
     const messages = await ctx.runQuery(internal.messages._listMessagesInternal, {
       sessionId: args.sessionId,

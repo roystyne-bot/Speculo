@@ -8,6 +8,8 @@ import { api } from "../../../../convex/_generated/api";
 import { getToken } from "@/lib/auth-server";
 import { DashboardClient } from "./DashboardClient";
 
+
+
 export default async function DashboardPage() {
   const token = await getToken();
 

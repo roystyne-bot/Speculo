@@ -9,6 +9,8 @@ import TechStackRow from "./Techstackrow";
 import { DottedSurface } from "./Dottedsurface";
 import { Mic, MessagesSquare, Target, TrendingUp } from "lucide-react";
 import FeatureRow from "../components/web/FeatureRow";
+import TakeAction from "../components/web/TakeAction";
+import Footer from "./Footer";
 
 const quicksand = Quicksand({ subsets: ["latin"], weight: ["500", "600", "700"] });
 
@@ -19,8 +21,10 @@ export default function LandingPage() {
       <Navbar />
       <Hero />
       <RolesCarousel />
-      <TechStackRow />
+      <TechStackRows />
       <WhySpeculo />
+      <TakeActions />
+      <Footer />
       {/* CtaBanner, Footer come back once this section is confirmed */}
     </div>
   );
@@ -163,9 +167,25 @@ function ScoreItem({ label, value }: { label: string; value: number }) {
   );
 }
 
+
+function TechStackRows() {
+  return (
+    <section className="flex flex-col gap-5 px-6 md:px-10 py-24" style={{ backgroundColor: "#0F1115" }}>
+      <div className="bg-spring-pale max-w-max py-0.5 px-3 rounded-full text-xs font-semibold text-green-600">
+        Our Strengths
+      </div>
+      <TechStackRow />
+    </section>
+  );
+}
+
+
 function WhySpeculo() {
   return (
-    <section className="px-6 md:px-10 py-24" style={{ backgroundColor: "#0F1115" }}>
+    <section className="flex flex-col gap-10 px-6 md:px-10 py-24" style={{ backgroundColor: "#0F1115" }}>
+      <div className="bg-spring-pale max-w-max py-0.5 px-3 rounded-full text-xs font-semibold text-green-600">
+        Our Strengths
+      </div>
       <div className="mx-auto max-w-5xl">
         <h2
           className={`${quicksand.className} text-3xl md:text-4xl font-semibold mb-12`}
@@ -192,6 +212,19 @@ function WhySpeculo() {
             icon={<TrendingUp size={80} color="#0A2E17" />}
           />
         </div>
+      </div>
+    </section>
+  );
+}
+
+function TakeActions(){
+  return (
+    <section className="flex flex-col px-6 gap-10 md:px-10 py-24" style={{ backgroundColor: "#0F1115" }}>
+      <div className="bg-spring-pale max-w-max py-0.5 px-3 rounded-full text-xs font-semibold text-green-600">
+        Take Action
+      </div>
+      <div className="mx-auto max-w-5xl">
+        <TakeAction />
       </div>
     </section>
   );

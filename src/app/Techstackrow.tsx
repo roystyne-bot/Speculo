@@ -48,11 +48,9 @@ export default function TechStackRow() {
   return (
     <section className="py-14" style={{ backgroundColor: "#0F1115" }}>
       
+      
 
-       <h2 className={`${quicksand.className} mx-10 sm:mx-14 max-w-5xl flex flex-col mb-3 text-3xl font-semibold`} style={{ color: "#F5F7FA" }}>
-        <span className="text-sm font-medium tracking-wide uppercase" style={{ color: "#2FDD79" }}>
-        Built with
-      </span>
+       <h2 className={`${quicksand.className} mx-10 sm:mx-14 max-w-5xl flex flex-col mb-6 text-3xl font-semibold`} style={{ color: "#F5F7FA" }}>
           Built for the role you are interviewing for.
         </h2>
 

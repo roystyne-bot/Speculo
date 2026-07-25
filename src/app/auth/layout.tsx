@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function AuthLayout({ children }: {children: React.ReactNode}) {
   return (
-    <div className="font-sans min-h-screen bg-onyx-light flex items-center justify-center">
+    <div className="min-h-screen bg-onyx-light flex items-center justify-center">
         
         <div className="absolute top-5 left-5">
            <Link href="/"

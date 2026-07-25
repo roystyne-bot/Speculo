@@ -10,6 +10,10 @@ import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import toast from "react-hot-toast";
 import { Eye, EyeOff, Loader2, AlertCircle } from "lucide-react";
+import { Quicksand } from "next/font/google";
+
+const quicksand = Quicksand({ subsets: ["latin"], weight: ["500", "600", "700"] });
+
 
 export default function LoginPage() {
   const [isPending, startTransition] = useTransition();
@@ -41,14 +45,15 @@ export default function LoginPage() {
 
   return (
    
-      <div className="w-full max-w-[440px] font-sans">
+      <div className={`w-full max-w-[440px] ${quicksand.className}`}>
 
         
-        <div className="flex items-center gap-2.5 mb-8 justify-center">
-          <div className="w-2.5 h-2.5 rounded-full bg-spring animate-pulse" />
-          <span className="text-white italic font-bold font-serif text-lg tracking-tight">
-            Speculo
+        <div className="flex text-2xl items-center mb-8 justify-center">
+          
+          <span className="text-white italic font-bold font-serif text-3xl tracking-tight">
+            S
           </span>
+          peculo
         </div>
 
         

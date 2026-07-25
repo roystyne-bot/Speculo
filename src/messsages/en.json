@@ -1,0 +1,61 @@
+{
+  "Navbar": {
+    "roles": "Roles",
+    "setup": "Setup",
+    "interview": "Interview",
+    "debrief": "Debrief",
+    "logIn": "Log in",
+    "logOut": "Log out",
+    "signUp": "Sign up"
+  },
+  "Hero": {
+    "eyebrow": "AI mock interviews",
+    "headline": "Practice the interview before it counts.",
+    "description": "Speculo runs a real interview with you — asks the questions, listens to your answers, and scores you the way a real interviewer would.",
+    "startPracticing": "Start practicing",
+    "logIn": "Log in",
+    "demoQuestionTag": "Behavioral · Teamwork",
+    "demoQuestion": "Tell me about a time you disagreed with a teammate. How did you handle it?",
+    "demoAnswerLabel": "Your answer",
+    "demoAnswer": "I proposed we each list our concerns, then found where they overlapped...",
+    "recording": "Recording",
+    "relevance": "Relevance",
+    "clarity": "Clarity",
+    "depth": "Depth",
+    "demoFeedback": "Clear example with a concrete resolution. Could go deeper on the outcome."
+  },
+  "RolesCarousel": {
+    "eyebrow": "Practice by role",
+    "headline": "Built for the role you're interviewing for.",
+    "startPracticing": "Start practicing",
+    "frontendTitle": "Frontend",
+    "frontendBody": "React, state management, accessibility, performance.",
+    "backendTitle": "Backend",
+    "backendBody": "APIs, databases, auth, and system reliability.",
+    "fullstackTitle": "Full-Stack",
+    "fullstackBody": "End-to-end ownership, from schema to UI.",
+    "devopsTitle": "DevOps",
+    "devopsBody": "CI/CD, infrastructure, and deployment strategy.",
+    "mobileTitle": "Mobile",
+    "mobileBody": "Native and cross-platform app development.",
+    "dataTitle": "Data",
+    "dataBody": "Pipelines, modeling, and data-driven decisions.",
+    "systemsTitle": "Systems",
+    "systemsBody": "Low-level design, performance, and architecture.",
+    "cloudTitle": "Cloud",
+    "cloudBody": "Scalable infrastructure and cloud-native design."
+  },
+  "TechStackRow": {
+    "builtWith": "Built with"
+  },
+  "Footer": {
+    "quote": "Every question deserves a real answer — and every answer deserves honest feedback. That's the whole point of practicing before it counts.",
+    "product": "Product",
+    "home": "Home",
+    "signUp": "Sign up",
+    "logIn": "Log in",
+    "resources": "Resources",
+    "practiceByRole": "Practice by role",
+    "rights": "All rights reserved."
+  }
+}
