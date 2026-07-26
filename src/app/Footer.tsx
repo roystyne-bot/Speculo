@@ -1,22 +1,31 @@
 "use client";
 
+import { useLanguage } from "@/components/web/LanguageProvider";
 import { Quicksand } from "next/font/google";
 import { SiGithub } from "react-icons/si";
 
 const quicksand = Quicksand({ subsets: ["latin"], weight: ["600", "700"] });
 
-const PRODUCT_LINKS = [
-  { label: "Home", href: "/" },
-  { label: "Sign up", href: "/auth/sign-up" },
-  { label: "Log in", href: "/auth/sign-in" },
+const PRODUCT_META = [
+  { key: "home", href: "/" },
+  { key: "signUp", href: "/auth/sign-up" },
+  { key: "logIn", href: "/auth/sign-in" },
 ];
 
-const RESOURCE_LINKS = [
-  { label: "Practice by role", href: "#roles" },
-  { label: "GitHub", href: "https://github.com/roystyne-bot" },
+// GitHub is a proper noun — not translated, same label in both languages.
+const RESOURCE_META = [
+  { key: "practiceByRole", href: "#roles" },
+  { key: "github", href: "https://github.com/roystyne-bot", literal: "GitHub" },
 ];
 
 export default function Footer() {
+  const { t } = useLanguage();
+  const PRODUCT_LINKS = PRODUCT_META.map((l) => ({ label: t(`Footer.${l.key}`), href: l.href }));
+  const RESOURCE_LINKS = RESOURCE_META.map((l) => ({
+    label: l.literal ?? t(`Footer.${l.key}`),
+    href: l.href,
+  }));
+
   return (
     <footer className="px-6 pt-20 pb-10 md:px-10" style={{ backgroundColor: "#0F1115", borderTop: "1px solid #1D2026" }}>
       <div className="mx-auto max-w-5xl">
@@ -29,8 +38,7 @@ export default function Footer() {
               </span>
             </div>
             <p className="mt-5 text-base italic leading-relaxed max-w-sm" style={{ color: "#9AA0AC" }}>
-              "Every question deserves a real answer — and every answer deserves honest
-              feedback. That's the whole point of practicing before it counts."
+              "{t("Footer.quote")}"
             </p>
             <a
               href="https://github.com/roystyne-bot"
@@ -47,11 +55,11 @@ export default function Footer() {
           <div className="grid grid-cols-2 gap-8 md:justify-items-end">
             <div>
               <p className="text-xs uppercase tracking-wide" style={{ color: "#5A5F68" }}>
-                Product
+                {t("Footer.product")}
               </p>
               <ul className="mt-4 space-y-2.5">
                 {PRODUCT_LINKS.map((link) => (
-                  <li key={link.label}>
+                  <li key={link.href}>
                     <a
                       href={link.href}
                       className="text-sm transition-colors duration-150 hover:text-white"
@@ -65,11 +73,11 @@ export default function Footer() {
             </div>
             <div>
               <p className="text-xs uppercase tracking-wide" style={{ color: "#5A5F68" }}>
-                Resources
+                {t("Footer.resources")}
               </p>
               <ul className="mt-4 space-y-2.5">
                 {RESOURCE_LINKS.map((link) => (
-                  <li key={link.label}>
+                  <li key={link.href}>
                     <a
                       href={link.href}
                       className="text-sm transition-colors duration-150 hover:text-white"
@@ -86,7 +94,7 @@ export default function Footer() {
 
         <div className="mt-16 pt-6 flex justify-between items-center" style={{ borderTop: "1px solid #1D2026" }}>
           <p className="text-xs" style={{ color: "#5A5F68" }}>
-            Speculo © {new Date().getFullYear()}. All rights reserved.
+            Speculo © {new Date().getFullYear()}. {t("Footer.rights")}
           </p>
         </div>
       </div>

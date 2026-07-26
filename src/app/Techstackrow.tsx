@@ -1,10 +1,8 @@
 "use client";
 
+import { useLanguage } from "@/components/web/LanguageProvider";
 import { SiNextdotjs, SiTailwindcss, SiConvex } from "react-icons/si";
 import { Groq } from "@lobehub/icons";
-import { Quicksand } from "next/font/google";
-
-const quicksand = Quicksand({ subsets: ["latin"], weight: ["500", "600", "700"] });
 
 // Convex and Better Auth aren't AI-model brands, so they're outside
 // @lobehub/icons' scope, and I couldn't verify either exists in any
@@ -15,8 +13,8 @@ const quicksand = Quicksand({ subsets: ["latin"], weight: ["500", "600", "700"] 
 const STACK = [
   { name: "Next.js", render: () => <SiNextdotjs size={26} color="#E8EDF8" /> },
   { name: "Tailwind CSS", render: () => <SiTailwindcss size={26} color="#38BDF8" /> },
-  { name: "Groq", render: () => <Groq size={26} /> },
-  { name: "Convex", render: SiConvex ? () => <SiConvex size={26} color="#E8EDF8" /> : null },
+  { name: "Groq", render: () => <Groq size={26} className="text-spring"/> },
+  { name: "Convex", render: () => <SiConvex size={26} class/> },
   { name: "Better Auth", render: null },
 ];
 
@@ -43,16 +41,13 @@ function StackItem({ name, render }: { name: string; render: (() => React.ReactN
   );
 }
 
-
 export default function TechStackRow() {
+  const { t } = useLanguage();
   return (
     <section className="py-14" style={{ backgroundColor: "#0F1115" }}>
-      
-      
-
-       <h2 className={`${quicksand.className} mx-10 sm:mx-14 max-w-5xl flex flex-col mb-6 text-3xl font-semibold`} style={{ color: "#F5F7FA" }}>
-          Built for the role you are interviewing for.
-        </h2>
+      <p className="text-center text-xs uppercase tracking-wide mb-6" style={{ color: "#5A5F68" }}>
+        {t("TechStackRow.builtWith")}
+      </p>
 
       {/* Bounded, centered container — the marquee scrolls within this box
           rather than spanning the full viewport edge to edge. */}

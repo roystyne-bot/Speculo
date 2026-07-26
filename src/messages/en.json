@@ -48,6 +48,21 @@
   "TechStackRow": {
     "builtWith": "Built with"
   },
+  "Common": {
+    "ourStrengths": "Our Strengths"
+  },
+  "WhySpeculo": {
+    "heading": "Why Speculo?",
+    "feature1Title": "Real questions, real pressure",
+    "feature1Description": "Speculo generates role-specific interview questions and adapts follow-ups based on your answers, just like a real interviewer would.",
+    "feature2Title": "Built for the role you're targeting",
+    "feature2Description": "Practice sessions are tailored to your exact stack and job title, not generic interview questions.",
+    "feature3Title": "Track your progress over time",
+    "feature3Description": "Every session is scored and logged, so you can see exactly where you're improving before the real interview."
+  },
+  "TakeAction": {
+    "eyebrow": "Take Action"
+  },
   "Footer": {
     "quote": "Every question deserves a real answer — and every answer deserves honest feedback. That's the whole point of practicing before it counts.",
     "product": "Product",

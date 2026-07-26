@@ -48,6 +48,21 @@
   "TechStackRow": {
     "builtWith": "Construit avec"
   },
+  "Common": {
+    "ourStrengths": "Nos Atouts"
+  },
+  "WhySpeculo": {
+    "heading": "Pourquoi Speculo ?",
+    "feature1Title": "Des questions réelles, une vraie pression",
+    "feature1Description": "Speculo génère des questions d'entretien spécifiques au poste et adapte les questions de suivi selon vos réponses, exactement comme le ferait un vrai recruteur.",
+    "feature2Title": "Conçu pour le poste que vous visez",
+    "feature2Description": "Les sessions d'entraînement sont adaptées à votre stack technique et à votre intitulé de poste exact, pas des questions génériques.",
+    "feature3Title": "Suivez votre progression dans le temps",
+    "feature3Description": "Chaque session est notée et enregistrée, afin que vous puissiez voir précisément où vous progressez avant le véritable entretien."
+  },
+  "TakeAction": {
+    "eyebrow": "Passez à l'action"
+  },
   "Footer": {
     "quote": "Chaque question mérite une vraie réponse — et chaque réponse mérite un retour honnête. C'est tout l'intérêt de s'entraîner avant que ça compte.",
     "product": "Produit",

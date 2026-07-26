@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
+import { useLanguage } from "./LanguageProvider";
 import { Quicksand } from "next/font/google";
 import {
   ChevronLeft,
@@ -17,31 +18,33 @@ import {
 
 const quicksand = Quicksand({ subsets: ["latin"], weight: ["500", "600", "700"] });
 
-// Small curated palette, cycled per card — not one color for everything,
-// but not full rainbow chaos either. All still sit comfortably in the dark
-// onyx palette.
-const ROLES = [
-  { icon: Layout, title: "Frontend", body: "React, state management, accessibility, performance.", color: "#2FDD79" },
-  { icon: Server, title: "Backend", body: "APIs, databases, auth, and system reliability.", color: "#5B7FFF" },
-  { icon: Layers, title: "Full-Stack", body: "End-to-end ownership, from schema to UI.", color: "#F5A623" },
-  { icon: GitBranch, title: "DevOps", body: "CI/CD, infrastructure, and deployment strategy.", color: "#FF6B6B" },
-  { icon: Smartphone, title: "Mobile", body: "Native and cross-platform app development.", color: "#A78BFA" },
-  { icon: Database, title: "Data", body: "Pipelines, modeling, and data-driven decisions.", color: "#2FDD79" },
-  { icon: Cpu, title: "Systems", body: "Low-level design, performance, and architecture.", color: "#5B7FFF" },
-  { icon: Cloud, title: "Cloud", body: "Scalable infrastructure and cloud-native design.", color: "#F5A623" },
+// Keys map into the RolesCarousel namespace in messages/en.json and fr.json.
+const ROLE_META = [
+  { key: "frontend", icon: Layout, color: "#2FDD79" },
+  { key: "backend", icon: Server, color: "#5B7FFF" },
+  { key: "fullstack", icon: Layers, color: "#F5A623" },
+  { key: "devops", icon: GitBranch, color: "#FF6B6B" },
+  { key: "mobile", icon: Smartphone, color: "#A78BFA" },
+  { key: "data", icon: Database, color: "#2FDD79" },
+  { key: "systems", icon: Cpu, color: "#5B7FFF" },
+  { key: "cloud", icon: Cloud, color: "#F5A623" },
 ];
 
-const MAX_CARD_WIDTH = 450; // px cap so it doesn't balloon on large monitors
+const MAX_CARD_WIDTH = 560; // px cap so it doesn't balloon on large monitors
 const CARD_WIDTH_PCT = 62; // of track width, below the cap
 const CARD_GAP = 20;
 const AUTOPLAY_MS = 4000;
 const TRANSITION_MS = 400;
 
-// Clone the last card at the start and the first card at the end — this
-// is what makes wrap-around possible without ever visually reversing.
-const EXTENDED = [ROLES[ROLES.length - 1], ...ROLES, ROLES[0]];
-
 export default function RolesCarousel() {
+  const { t } = useLanguage();
+  const ROLES = ROLE_META.map((r) => ({
+    ...r,
+    title: t(`RolesCarousel.${r.key}Title`),
+    body: t(`RolesCarousel.${r.key}Body`),
+  }));
+  const EXTENDED = [ROLES[ROLES.length - 1], ...ROLES, ROLES[0]];
+
   const trackRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [realIndex, setRealIndex] = useState(0); // 0..ROLES.length-1
@@ -127,7 +130,7 @@ export default function RolesCarousel() {
         const distance = Math.abs(trackCenter - cardCenter);
         const normalized = Math.min(distance / card.clientWidth, 1);
         card.style.transform = `scale(${1 - normalized * 0.15})`;
-        card.style.opacity = `${1 - normalized * 0.55}`; 
+        card.style.opacity = `${1 - normalized * 0.55}`;
       });
       ticking = false;
     };
@@ -145,6 +148,7 @@ export default function RolesCarousel() {
 
   return (
     <section
+      id="roles"
       className="px-6 py-20 md:px-10"
       style={{ backgroundColor: "#0F1115" }}
       onMouseEnter={() => setIsPaused(true)}
@@ -152,31 +156,31 @@ export default function RolesCarousel() {
     >
       <div className="mx-auto max-w-5xl">
         <p className="text-xs uppercase tracking-wide" style={{ color: "#2FDD79" }}>
-          Practice by role
+          {t("RolesCarousel.eyebrow")}
         </p>
         <h2 className={`${quicksand.className} mt-2 text-3xl font-semibold`} style={{ color: "#F5F7FA" }}>
-          Built for the role you're interviewing for.
+          {t("RolesCarousel.headline")}
         </h2>
 
         <div className="relative mt-10">
           <div
             ref={trackRef}
             className="flex overflow-x-auto scroll-smooth pb-4"
-            style={{ scrollSnapType: "x mandatory", scrollbarWidth: "none", gap: CARD_GAP, perspective: 1300, transformStyle: "preserve-3d" }}
+            style={{ scrollSnapType: "x mandatory", scrollbarWidth: "none", gap: CARD_GAP }}
           >
             {EXTENDED.map((role, i) => (
               <div
                 key={i}
                 ref={(el) => { cardRefs.current[i] = el; }}
-                className="shrink-0 rounded-3xl p-8 bg-onyx-light"
+                className="shrink-0 rounded-3xl p-8"
                 style={{
                   width: `${CARD_WIDTH_PCT}%`,
                   maxWidth: MAX_CARD_WIDTH,
                   scrollSnapAlign: "center",
-                  /*backgroundColor: "#15181D",*/
+                  backgroundColor: "#15181D",
                   border: "1px solid #2A2D33",
                   boxShadow: `0 20px 45px ${role.color}22`,
-                  transition: `transform ${TRANSITION_MS}ms ease, opacity ${TRANSITION_MS}ms ease, transformStyle: preserve-3d`,
+                  transition: `transform ${TRANSITION_MS}ms ease, opacity ${TRANSITION_MS}ms ease`,
                 }}
               >
                 <div
@@ -193,10 +197,10 @@ export default function RolesCarousel() {
                 </p>
                 <a
                   href="/auth/sign-up"
-                  className="mt-6 inline-block px-3 py-2.5 text-sm font-semibold rounded-sm text-onyx-light"
-                  style={{ backgroundColor: role.color, boxShadow: `0 6px 20px ${role.color}55` }}
+                  className="mt-6 inline-block px-5 py-2.5 text-sm font-semibold rounded-full"
+                  style={{ backgroundColor: role.color, color: "#0B0C0E", boxShadow: `0 6px 20px ${role.color}55` }}
                 >
-                  Start practicing
+                  {t("RolesCarousel.startPracticing")}
                 </a>
               </div>
             ))}
