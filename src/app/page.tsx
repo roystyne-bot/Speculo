@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useLanguage } from "@/components/web/LanguageProvider";
 import { Quicksand } from "next/font/google";
 import { CursorStar } from "./Cursorstar";
 import Navbar from "../components/web/navbar";
@@ -15,6 +16,7 @@ import Footer from "./Footer";
 const quicksand = Quicksand({ subsets: ["latin"], weight: ["500", "600", "700"] });
 
 export default function LandingPage() {
+  
   return (
     <div style={{ backgroundColor: "#0F1115" }} className="min-h-screen">
       <CursorStar />
@@ -42,6 +44,7 @@ function StarAccent({ className = "" }: { className?: string }) {
 }
 
 function Hero() {
+  const { t } = useLanguage();
   return (
     <>
     <section
@@ -58,18 +61,17 @@ function Hero() {
         <div className="relative">
           <StarAccent className="absolute -top-6 left-1 opacity-80" />
           <p className="text-xs uppercase tracking-wide" style={{ color: "#2FDD79" }}>
-            AI mock interviews
+            {t("Hero.eyebrow")}
           </p>
           <h1
             className={`${quicksand.className} mt-3 text-4xl md:text-5xl font-semibold leading-tight`}
             style={{ color: "#F5F7FA" }}
           >
-            Practice the interview before it counts.
+            {t("Hero.headline")}
           </h1>
           <StarAccent className="absolute top-2 right-8 opacity-50" />
           <p className="mt-4 text-base leading-relaxed" style={{ color: "#9AA0AC" }}>
-            Speculo runs a real interview with you — asks the questions, listens to your
-            answers, and scores you the way a real interviewer would.
+            {t("Hero.description")}
           </p>
           <div className="mt-8 flex gap-3">
             
@@ -77,14 +79,14 @@ function Hero() {
               className="px-5 py-2.5 text-sm font-semibold rounded-full transition-opacity duration-150 hover:opacity-90"
               style={{ backgroundColor: "#2FDD79", color: "#0A2E17" }}
               >
-              Start practicing
+              {t("Hero.startPracticing")}
             </a>
             
               <a href="/auth/sign-in"
               className="px-5 py-2.5 text-sm rounded-full transition-colors duration-150"
               style={{ border: "1px solid #34383F", color: "#D6D9DE" }}
               >
-              Log in
+              {t("Hero.logIn")}
             </a>
           </div>
         </div>
@@ -97,13 +99,15 @@ function Hero() {
 }
 
 function HeroDemo() {
+
+  const { t } = useLanguage();
   const [stage, setStage] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => setStage((s) => (s + 1) % 3), 2600);
     return () => clearInterval(interval);
   }, []);
-
+   
   return (
     <div
       className="rounded-3xl overflow-hidden"
@@ -124,33 +128,33 @@ function HeroDemo() {
       <div className="h-64 p-6 relative">
         <div className="absolute inset-6 transition-opacity duration-500" style={{ opacity: stage === 0 ? 1 : 0 }}>
           <p className="text-[10px] uppercase tracking-wide" style={{ color: "#2FDD79" }}>
-            Behavioral · Teamwork
+            {t("Hero.demoQuestionTag")}
           </p>
           <p className="mt-2 text-sm leading-relaxed" style={{ color: "#F5F7FA" }}>
-            Tell me about a time you disagreed with a teammate. How did you handle it?
+            {t("Hero.demoQuestion")}
           </p>
         </div>
 
         <div className="absolute inset-6 transition-opacity duration-500" style={{ opacity: stage === 1 ? 1 : 0 }}>
           <p className="text-[10px] uppercase tracking-wide" style={{ color: "#2FDD79" }}>
-            Your answer
+            {t("Hero.demoQuestionLabel")}
           </p>
           <p className="mt-2 text-sm leading-relaxed" style={{ color: "#B8BCC4" }}>
-            I proposed we each list our concerns, then found where they overlapped...
+             {t("Hero.demoAnswer")}
           </p>
           <div className="mt-4 flex items-center gap-1.5 text-xs" style={{ color: "#5B7FFF" }}>
-            <Mic size={13} /> Recording
+            <Mic size={13} /> {t("Hero.recording")}
           </div>
         </div>
 
         <div className="absolute inset-6 transition-opacity duration-500" style={{ opacity: stage === 2 ? 1 : 0 }}>
           <div className="flex gap-6">
-            <ScoreItem label="Relevance" value={8} />
-            <ScoreItem label="Clarity" value={7} />
-            <ScoreItem label="Depth" value={7} />
+            <ScoreItem label={t("Hero.relevance")} value={8} />
+            <ScoreItem label={t("Hero.clarity")} value={7} />
+            <ScoreItem label={t("Hero.depth")} value={7} />
           </div>
           <p className="mt-4 text-xs leading-relaxed" style={{ color: "#9AA0AC" }}>
-            Clear example with a concrete resolution. Could go deeper on the outcome.
+            {t("Hero.demoFeedback")}
           </p>
         </div>
       </div>
@@ -169,10 +173,11 @@ function ScoreItem({ label, value }: { label: string; value: number }) {
 
 
 function TechStackRows() {
+  const { t } = useLanguage();
   return (
     <section className="flex flex-col gap-5 px-6 md:px-10 py-24" style={{ backgroundColor: "#0F1115" }}>
       <div className="bg-spring-pale max-w-max py-0.5 px-3 rounded-full text-xs font-semibold text-green-600">
-        Our Strengths
+        {t("RolesCarousel.eyebrow")}
       </div>
       <TechStackRow />
     </section>
@@ -181,34 +186,35 @@ function TechStackRows() {
 
 
 function WhySpeculo() {
+  const { t } = useLanguage();
   return (
     <section className="flex flex-col gap-10 px-6 md:px-10 py-24" style={{ backgroundColor: "#0F1115" }}>
       <div className="bg-spring-pale max-w-max py-0.5 px-3 rounded-full text-xs font-semibold text-green-600">
-        Our Strengths
+        {t("Common.ourStrengths")}
       </div>
       <div className="mx-auto max-w-5xl">
         <h2
           className={`${quicksand.className} text-3xl md:text-4xl font-semibold mb-12`}
           style={{ color: "#F5F7FA" }}
         >
-          Why Speculo?
+          {t("WhySpeculo.heading")}
         </h2>
 
         <div className="flex flex-col gap-8">
           <FeatureRow
-            title="Real questions, real pressure"
-            description="Speculo generates role-specific interview questions and adapts follow-ups based on your answers, just like a real interviewer would."
+            title={t("WhySpeculo.feature1Title")}
+            description={t("WhySpeculo.feature1Description")}
             icon={<MessagesSquare size={80} color="#0A2E17" />}
           />
           <FeatureRow
-            title="Built for the role you're targeting"
-            description="Practice sessions are tailored to your exact stack and job title, not generic interview questions."
+            title={t("WhySpeculo.feature2Title")}
+            description={t("WhySpeculo.feature2Description")}
             icon={<Target size={80} color="#0A2E17" />}
             reverse
           />
           <FeatureRow
-            title="Track your progress over time"
-            description="Every session is scored and logged, so you can see exactly where you're improving before the real interview."
+            title={t("WhySpeculo.feature3Title")}
+            description={t("WhySpeculo.feature3Description")}
             icon={<TrendingUp size={80} color="#0A2E17" />}
           />
         </div>
@@ -218,10 +224,11 @@ function WhySpeculo() {
 }
 
 function TakeActions(){
+  const { t } = useLanguage();
   return (
     <section className="flex flex-col px-6 gap-10 md:px-10 py-24" style={{ backgroundColor: "#0F1115" }}>
       <div className="bg-spring-pale max-w-max py-0.5 px-3 rounded-full text-xs font-semibold text-green-600">
-        Take Action
+        {t("TakeAction.eyebrow")}
       </div>
       <div className="mx-auto max-w-5xl">
         <TakeAction />

@@ -3,6 +3,7 @@
 
 import { usePreloadedQuery, Preloaded } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
+import { useLanguage } from "@/components/web/LanguageProvider";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -43,12 +44,13 @@ export function DashboardClient({ preloadedSessions, preloadedStats }: Props) {
 }
 
 function DashboardHeader() {
+    const { t } = useLanguage();
   return (
     <div className="flex flex-col pt-20 items-start justify-between gap-4 sm:flex-row sm:items-center">
       <div>
-        <h1 className={`${quicksand.className} text-3xl font-semibold text-foreground`}>Dashboard</h1>
+        <h1 className={`${quicksand.className} text-3xl font-semibold text-foreground`}>{t("Dashboard.title")}</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Track your interview practice and progress.
+          {t("Dashboard.describe")}
         </p>
       </div>
       <Button
@@ -56,7 +58,7 @@ function DashboardHeader() {
         className="bg-primary text-primary-foreground hover:bg-primary/90"
       >
         <a href="/interview/setup">
-          Start new interview
+         {t("Dashboard.startButton")}
         </a>
       </Button>
     </div>
@@ -68,12 +70,16 @@ function StatsRow({
 }: {
   stats: { total: number; average: number; best: number; streak: number };
 }) {
+   const { t } = useLanguage();
+
   const items = [
-    { label: "Total interviews", value: stats.total },
-    { label: "Average score", value: `${stats.average}%` },
-    { label: "Best score", value: `${stats.best}%` },
-    { label: "Practice streak", value: `${stats.streak} days` },
+    { label: `${t("Dashboard.totalInterviews")}`, value: stats.total },
+    { label: `${t("Dashboard.averageScore")}`, value: `${stats.average}%` },
+    { label: `${t("Dashboard.bestScore")}`, value: `${stats.best}%` },
+    { label: `${t("Dashboard.series")}`, value: `${stats.streak} days` },
   ];
+
+  
 
   return (
     <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
@@ -103,11 +109,12 @@ type SessionRow = {
 };
 
 function RecentSessions({ sessions }: { sessions: SessionRow[] }) {
+    const { t } = useLanguage();
   return (
     <Card className="border-border bg-card">
       <CardHeader>
         <CardTitle className="text-lg font-medium text-foreground">
-          Recent interviews
+          {t("Dashboard.recent")}
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -117,7 +124,7 @@ function RecentSessions({ sessions }: { sessions: SessionRow[] }) {
               <TableRow>
                 <TableHead>Role</TableHead>
                 <TableHead>Date</TableHead>
-                <TableHead>Duration</TableHead>
+                <TableHead>{t("Dashboard.duration")}</TableHead>
                 <TableHead>Score</TableHead>
                 <TableHead>Status</TableHead>
               </TableRow>
@@ -140,7 +147,7 @@ function RecentSessions({ sessions }: { sessions: SessionRow[] }) {
                           : "bg-secondary/15 text-secondary"
                       }
                     >
-                      {session.status === "completed" ? "Completed" : "In progress"}
+                      {session.status === "completed" ? t("Dashboard.completed") : "In progress"}
                     </Badge>
                   </TableCell>
                 </TableRow>

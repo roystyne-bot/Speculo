@@ -50,7 +50,7 @@ export default function LoginPage() {
         
         <div className="flex text-2xl items-center mb-8 justify-center">
           
-          <span className="text-white italic font-bold font-serif text-3xl tracking-tight">
+          <span className="text-spring font-bold font-serif text-3xl tracking-tight">
             S
           </span>
           peculo

@@ -1,6 +1,8 @@
 {
   "Navbar": {
     "roles": "Rôles",
+    "aboutUs": "À propos",
+    "pricing": "Tarifs",
     "setup": "Configuration",
     "interview": "Entretien",
     "debrief": "Bilan",
@@ -61,8 +63,11 @@
     "feature3Description": "Chaque session est notée et enregistrée, afin que vous puissiez voir précisément où vous progressez avant le véritable entretien."
   },
   "TakeAction": {
-    "eyebrow": "Passez à l'action"
-  },
+    "eyebrow": "Passez à l'action",
+    "readyToStart": "Prêt à Commencer Votre Parcours ?",
+    "description": "Speculo vous permet de vivre l’expérience d’un véritable entretien avec un développeur senior expert, qui vous posera des questions et vous donnera un retour sur vos réponses.",
+    "readMore": "En Savoir Plus"
+  },    
   "Footer": {
     "quote": "Chaque question mérite une vraie réponse — et chaque réponse mérite un retour honnête. C'est tout l'intérêt de s'entraîner avant que ça compte.",
     "product": "Produit",
@@ -72,5 +77,21 @@
     "resources": "Ressources",
     "practiceByRole": "Pratiquer par rôle",
     "rights": "Tous droits réservés."
+  },
+  "Dashboard": {
+    "title": "Tableau de Bord",
+    "describe": "Suivez vos entraînements aux entretiens et vos progrès.",
+    "startButton": "Commencer un nouvel entretien",
+    "totalInterviews": "Nombre total d’entretiens",
+    "averageScore": "Score moyen",
+    "bestScore": "Meilleur score",
+    "series": "Série d’entraînements",
+    "recent": "Entretiens récents",
+    "duration": "Durée",
+    "completed": "Terminé"
+  },
+  "SignUp": {
+    "signUp": "S'inscrire",
+    "logIn": "Connexion"
   }
 }

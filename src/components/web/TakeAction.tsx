@@ -1,19 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { Quicksand } from "next/font/google";
+import { useLanguage } from "@/components/web/LanguageProvider";
 
-const quicksand = Quicksand({ subsets: ["latin"], weight: ["600", "700"] });
-
-interface FeatureRowProps {
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-  reverse?: boolean;
-}
 
 export default function TakeAction() {
- 
+ const { t } = useLanguage();
 
   return (
     <div
@@ -25,17 +16,16 @@ export default function TakeAction() {
         boxShadow: "0 0 30px -10px rgba(47,221,121,0.35)"
       }}
     >
-     <h2 className="text-spring text-2xl">Ready to Start Your <br></br>Journey?</h2>
-      <p className="text-spring-pale">Speculo let you feel the sensation of a real interview 
-        with an expertise senior developer, who will ask you questions
-         and give you feedback on your answers.
+     <h2 className="text-spring text-2xl text-wrap">{t("TakeAction.readyToStart")}</h2>
+      <p className="text-spring-pale">
+        {t("TakeAction.description")}
       </p>
 
         <a
           href="/auth/sign-up"
           className="bg-green-700 hover:bg-green-600 text-white font-semibold py-2 px-6 rounded-xl transition-colors duration-300"
         >
-          Start Now
+         {t("TakeAction.readMore")}
         </a>
       </div>
     

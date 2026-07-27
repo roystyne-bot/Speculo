@@ -14,7 +14,7 @@ const STACK = [
   { name: "Next.js", render: () => <SiNextdotjs size={26} color="#E8EDF8" /> },
   { name: "Tailwind CSS", render: () => <SiTailwindcss size={26} color="#38BDF8" /> },
   { name: "Groq", render: () => <Groq size={26} className="text-spring"/> },
-  { name: "Convex", render: () => <SiConvex size={26} class/> },
+  { name: "Convex", render: () => <SiConvex size={26} className="text-pink-800"/> },
   { name: "Better Auth", render: null },
 ];
 

@@ -19,7 +19,11 @@ export default function Navbar() {
     { label: t("Navbar.interview"), href: "/interview/session" },
     { label: t("Navbar.debrief"), href: "/interview/debrief" },
   ];
-  const MARKETING_LINKS = [{ label: t("Navbar.roles"), href: "#roles" }];
+  const MARKETING_LINKS = [
+    { label: t("Navbar.roles"), href: "#roles" },
+    { label: t("Navbar.aboutUs"), href: "#AboutUs" },
+    { label: t("Navbar.pricing"), href: "#Pricing" },
+  ];
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -47,10 +51,10 @@ export default function Navbar() {
       >
         <a
           href={isAuthenticated ? "/interview/setup" : "/"}
-          className="flex items-center gap-1.5 text-xl font-bold shrink-0 text-foreground"
+          className="flex items-center text-xl font-bold shrink-0 text-foreground"
         >
-          <div className="w-3.5 h-3.5 rounded-full bg-spring animate-pulse shadow-xl shadow-spring-deep" />
-          <span>Speculo</span>
+          <span className="font-serif text-3xl text-spring">S</span>
+          peculo
         </a>
 
         <div className="hidden md:flex gap-1">
@@ -74,7 +78,7 @@ export default function Navbar() {
           ) : isAuthenticated ? (
             <button
               onClick={handleLogout}
-              className="px-4 py-2 hidden sm:flex bg-secondary text-secondary-foreground text-sm font-semibold rounded-lg hover:bg-secondary/70 transition-colors duration-150"
+              className="px-4 py-2 hidden text-red-500 sm:flex bg-secondary text-sm font-semibold rounded-lg hover:bg-secondary/70 transition-colors duration-150"
             >
               {t("Navbar.logOut")}
             </button>
@@ -130,7 +134,7 @@ export default function Navbar() {
           ) : (
             <>
               <a
-                href="/auth/sign-in"
+                href="/auth/login"
                 onClick={() => setMenuOpen(false)}
                 className="px-5 py-3.5 text-sm text-muted-foreground tracking-wide hover:bg-spring-pale hover:text-spring-deep border-b border-border transition-colors duration-150"
               >

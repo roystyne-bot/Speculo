@@ -52,7 +52,7 @@ export default function SignUpPage() {
        
         <div className="flex text-2xl items-center mb-8 justify-center">
           
-          <span className="text-white italic font-bold font-serif text-3xl tracking-tight">
+          <span className="text-spring font-bold font-serif text-3xl tracking-tight">
             S
           </span>
           peculo
@@ -238,7 +238,7 @@ export default function SignUpPage() {
 
             {/* Divider */}
             <div className="flex items-center gap-3 my-6">
-              <div className="flex-1 h-px bg-onyx-light" />
+              <div className="flex-1 h-px bg-[#2A3045]" />
               <span className="text-[10px] font-mono text-[#3A4560] uppercase tracking-widest">
                 or
               </span>
