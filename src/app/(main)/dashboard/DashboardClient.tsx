@@ -3,6 +3,7 @@
 
 import { usePreloadedQuery, Preloaded } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
+import { ReminderSettings } from "@/components/web/ReminderSettings";
 import { useLanguage } from "@/components/web/LanguageProvider";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -37,6 +38,7 @@ export function DashboardClient({ preloadedSessions, preloadedStats }: Props) {
       <div className="mx-auto max-w-6xl space-y-8">
         <DashboardHeader />
         <StatsRow stats={stats} />
+         <ReminderSettings />
         <RecentSessions sessions={sessions} />
       </div>
     </div>

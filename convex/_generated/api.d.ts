@@ -10,6 +10,7 @@
 
 import type * as audio from "../audio.js";
 import type * as auth from "../auth.js";
+import type * as crons from "../crons.js";
 import type * as debriefs from "../debriefs.js";
 import type * as http from "../http.js";
 import type * as lib_groq from "../lib/groq.js";
@@ -18,6 +19,7 @@ import type * as messages from "../messages.js";
 import type * as prompts_Questionprompt from "../prompts/Questionprompt.js";
 import type * as prompts_Scoringprompt from "../prompts/Scoringprompt.js";
 import type * as prompts_debriefPrompt from "../prompts/debriefPrompt.js";
+import type * as reminders from "../reminders.js";
 import type * as sessions from "../sessions.js";
 import type * as users from "../users.js";
 
@@ -30,6 +32,7 @@ import type {
 declare const fullApi: ApiFromModules<{
   audio: typeof audio;
   auth: typeof auth;
+  crons: typeof crons;
   debriefs: typeof debriefs;
   http: typeof http;
   "lib/groq": typeof lib_groq;
@@ -38,6 +41,7 @@ declare const fullApi: ApiFromModules<{
   "prompts/Questionprompt": typeof prompts_Questionprompt;
   "prompts/Scoringprompt": typeof prompts_Scoringprompt;
   "prompts/debriefPrompt": typeof prompts_debriefPrompt;
+  reminders: typeof reminders;
   sessions: typeof sessions;
   users: typeof users;
 }>;

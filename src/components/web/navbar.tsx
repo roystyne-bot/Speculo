@@ -6,6 +6,8 @@ import { Menu, X } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { LocaleSwitcher } from "./LocaleSwitcher";
 import { ThemeToggle } from "./ThemeToggle";
+import Image from "next/image";
+
 
 export default function Navbar() {
   const { t } = useLanguage();
@@ -59,9 +61,22 @@ export default function Navbar() {
           href={isAuthenticated ? "/interview/setup" : "/"}
           className="flex items-center text-xl font-bold shrink-0 text-foreground"
         >
+          <Image
+          src=".\icon.svg"
+          alt="Speculo's Logo"
+          width={35}
+          height={35}
+          className="mr-1"
+          />
+          <div className={`${scrolled ? "hidden" : "visible"}`}>
           <span className="font-serif text-3xl text-spring">S</span>
           peculo
+          </div>
+          <span className={`border-r-2 ml-3 w-[0.5px] h-[25px] border-white ${scrolled ? "visible" : "hidden"}`}>
+        </span>
         </a>
+
+        
 
         <div className="hidden md:flex gap-1">
           {links.map((link) => (

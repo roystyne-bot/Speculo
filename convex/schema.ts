@@ -3,120 +3,138 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 export default defineSchema({
-   //*** USERS ***//
+  //*** USERS ***//
   // Mirrors the Better Auth user — created/updated on sign in
   users: defineTable({
     // Better Auth user id — used to link sessions to users
-    authId:       v.string(),
-    name:         v.string(),
-    email:        v.string(),
-    image:        v.optional(v.string()),
-    createdAt:    v.number(),            
+    authId: v.string(),
+    name: v.string(),
+    email: v.string(),
+    image: v.optional(v.string()),
+    createdAt: v.number(),
   })
     .index("by_authId", ["authId"])
     .index("by_email", ["email"]),
 
-
   //----SESSIONS ----
   // One row per interview attempt
   // convex/schema.ts — sessions table only, with focusAreas added.
-// Everything else in your schema (users, messages, debriefs) is unchanged.
+  // Everything else in your schema (users, messages, debriefs) is unchanged.
 
   sessions: defineTable({
-    userId:       v.id("users"),
-    role:         v.union(
-                    v.literal("fullstack"),
-                    v.literal("frontend"),
-                    v.literal("backend"),
-                    v.literal("devops"),
-                    v.literal("mobile"),
-                    v.literal("data"),
-                    v.literal("systems"),
-                    v.literal("cloud"),
-                  ),
-    level:        v.union(
-                    v.literal("junior"),
-                    v.literal("mid"),
-                    v.literal("senior"),
-                  ),
-    mode:         v.union(
-                    v.literal("behavioral"),
-                    v.literal("technical"),
-                    v.literal("mixed"),
-                  ),
-    status:       v.union(
-                    v.literal("setup"),
-                    v.literal("active"),
-                    v.literal("completed"),
-                    v.literal("abandoned"),
-                  ),
-    focusAreas:   v.optional(v.array(v.string())),  // NEW — tags picked in setup, optional for old rows
-    totalScore:   v.optional(v.number()),
-    startedAt:    v.optional(v.number()),
-    completedAt:  v.optional(v.number()),
-    createdAt:    v.number(),
+    userId: v.id("users"),
+    role: v.union(
+      v.literal("fullstack"),
+      v.literal("frontend"),
+      v.literal("backend"),
+      v.literal("devops"),
+      v.literal("mobile"),
+      v.literal("data"),
+      v.literal("systems"),
+      v.literal("cloud"),
+    ),
+    level: v.union(v.literal("junior"), v.literal("mid"), v.literal("senior")),
+    mode: v.union(
+      v.literal("behavioral"),
+      v.literal("technical"),
+      v.literal("mixed"),
+    ),
+    status: v.union(
+      v.literal("setup"),
+      v.literal("active"),
+      v.literal("completed"),
+      v.literal("abandoned"),
+    ),
+    focusAreas: v.optional(v.array(v.string())), // NEW — tags picked in setup, optional for old rows
+    totalScore: v.optional(v.number()),
+    startedAt: v.optional(v.number()),
+    completedAt: v.optional(v.number()),
+    createdAt: v.number(),
   })
     .index("by_userId", ["userId"])
     .index("by_userId_status", ["userId", "status"]),
 
-   //------MESSAGES ----
+  //------MESSAGES ----
   // One row per question and answers exchange inside a session
   messages: defineTable({
-    sessionId:    v.id("sessions"),
-    questionNumber: v.number(),          // 1–7, order within session
+    sessionId: v.id("sessions"),
+    questionNumber: v.number(), // 1–7, order within session
 
     // AI-generated question
-    question:     v.string(),
-    questionTag:  v.string(),            // e.g. "Behavioral · Teamwork"
+    question: v.string(),
+    questionTag: v.string(), // e.g. "Behavioral · Teamwork"
 
     // User's answer — optional until they submit
-    answer:       v.optional(v.string()),
-    wordCount:    v.optional(v.number()),
-    skipped:      v.optional(v.boolean()),
+    answer: v.optional(v.string()),
+    wordCount: v.optional(v.number()),
+    skipped: v.optional(v.boolean()),
 
     // Per-answer scores — set after Groq scores the answer
-    relevance:    v.optional(v.number()),   // 0–10
-    clarity:      v.optional(v.number()),   // 0–10
-    depth:        v.optional(v.number()),   // 0–10
+    relevance: v.optional(v.number()), // 0–10
+    clarity: v.optional(v.number()), // 0–10
+    depth: v.optional(v.number()), // 0–10
 
     // Raw AI feedback for this specific answer
-    feedback:     v.optional(v.string()),
+    feedback: v.optional(v.string()),
 
-    answeredAt:   v.optional(v.number()),   // Date.now() when submitted
-    createdAt:    v.number(),
+    answeredAt: v.optional(v.number()), // Date.now() when submitted
+    createdAt: v.number(),
   })
     .index("by_sessionId", ["sessionId"])
     .index("by_sessionId_questionNumber", ["sessionId", "questionNumber"]),
 
-
   // ── DEBRIEFS ───────────────────────────────────────────────────
   // One row per completed session — generated by Groq after last answer
   debriefs: defineTable({
-    sessionId:    v.id("sessions"),         // one-to-one with sessions
-    userId:       v.id("users"),
+    sessionId: v.id("sessions"), // one-to-one with sessions
+    userId: v.id("users"),
 
     // the Overall total scoring
-    overallScore:   v.number(),             
-    relevanceAvg:   v.number(),          
-    clarityAvg:     v.number(),
-    depthAvg:       v.number(),
+    overallScore: v.number(),
+    relevanceAvg: v.number(),
+    clarityAvg: v.number(),
+    depthAvg: v.number(),
 
-            // AI-generated feedback arrays
-            strengths:      v.array(v.string()),    // what the user did well
-            improvements:   v.array(v.string()),    // where to improve
-            studyTopics:    v.array(v.string()),    // recommended study topics
+    // AI-generated feedback arrays
+    strengths: v.array(v.string()), // what the user did well
+    improvements: v.array(v.string()), // where to improve
+    studyTopics: v.array(v.string()), // recommended study topics
 
     // This is grade accorded at the end
-    grade:        v.union(
-                    v.literal("Excellent"),
-                    v.literal("Good"),
-                    v.literal("Fair"),
-                    v.literal("Needs Work"),
-                  ),
+    grade: v.union(
+      v.literal("Excellent"),
+      v.literal("Good"),
+      v.literal("Fair"),
+      v.literal("Needs Work"),
+    ),
 
-    createdAt:    v.number(),
+    createdAt: v.number(),
   })
     .index("by_sessionId", ["sessionId"])
     .index("by_userId", ["userId"]),
 
+  //Reminder and Push Notifications
+
+  pushSubscriptions: defineTable({
+    userId: v.id("users"),
+    endpoint: v.string(),
+    p256dh: v.string(),
+    auth: v.string(),
+    createdAt: v.number(),
+  })
+    .index("by_userId", ["userId"])
+    .index("by_endpoint", ["endpoint"]),
+
+  reminders: defineTable({
+    userId: v.id("users"),
+    enabled: v.boolean(),
+    hour: v.number(),
+    minute: v.number(),
+    timezone: v.string(),
+    lastSentDate: v.optional(v.string()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_userId", ["userId"])
+    .index("by_enabled", ["enabled"]),
 });

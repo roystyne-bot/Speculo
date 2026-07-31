@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Create an Account and Log in",
-  description: "Sign up and Log in to start chatting on Texting App.",
+  description: "Sign up and Log in to start your AI Mocked Interview",
 };
 
 

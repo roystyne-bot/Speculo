@@ -55,3 +55,20 @@ self.addEventListener("fetch", (event) => {
     }),
   );
 });
+
+self.addEventListener("push", (event) => {
+  const data = event.data?.json() ?? {};
+
+  event.waitUntil(
+    self.registration.showNotification(data.title ?? "Speculo", {
+      body: data.body ?? "Time to practice.",
+      icon: data.icon ?? "/speculo-logo.svg",
+      data: { url: data.url ?? "/dashboard" },
+    }),
+  );
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  event.waitUntil(clients.openWindow(event.notification.data.url));
+});
