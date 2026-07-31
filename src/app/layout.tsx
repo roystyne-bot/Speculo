@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/ui/theme-provider";
 import { ConvexClientProvider } from "@/app/ConvexClientProvider";
 import { Quicksand } from "next/font/google";
 import { LanguageProvider } from "@/components/web/LanguageProvider";
+import { ServiceWorkerRegistration } from "@/components/web/ServiceWorkerRegistration";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -25,8 +26,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Speculo",
+  title: {
+    default: "Speculo",
+    template: "%s | Speculo",
+  },
   description: "AI Mock Interview Platform",
+  manifest: "/manifest.webmanifest",
+  applicationName: "Speculo",
 };
 
 export default function RootLayout({
@@ -52,6 +58,8 @@ export default function RootLayout({
             <LanguageProvider>{children}</LanguageProvider>
           </ConvexClientProvider>
         </ThemeProvider>
+
+        <ServiceWorkerRegistration />
       </body>
     </html>
   );
