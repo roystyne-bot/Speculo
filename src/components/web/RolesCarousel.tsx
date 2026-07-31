@@ -30,8 +30,8 @@ const ROLE_META = [
   { key: "cloud", icon: Cloud, color: "#F5A623" },
 ];
 
-const MAX_CARD_WIDTH = 560; // px cap so it doesn't balloon on large monitors
-const CARD_WIDTH_PCT = 62; // of track width, below the cap
+const MAX_CARD_WIDTH = 480; // px cap so it doesn't balloon on large monitors
+const CARD_WIDTH_PCT = 92; // of track width, below the cap
 const CARD_GAP = 20;
 const AUTOPLAY_MS = 4000;
 const TRANSITION_MS = 400;
@@ -116,7 +116,11 @@ export default function RolesCarousel() {
     return () => clearInterval(interval);
   }, [isPaused, next]);
 
-  // Live scale/opacity falloff based on distance from track center.
+  // Live scale/opacity/rotateY falloff based on distance from track center.
+  // The rotateY is what gives this genuine 3D depth (cards tilt away from
+  // the viewer as they move off-center) rather than just shrinking flat —
+  // needs `perspective` on the track container to actually render as a
+  // tilt instead of a flat rotation.
   useEffect(() => {
     const track = trackRef.current;
     if (!track) return;
@@ -127,10 +131,16 @@ export default function RolesCarousel() {
       cardRefs.current.forEach((card) => {
         if (!card) return;
         const cardCenter = card.offsetLeft + card.clientWidth / 2;
-        const distance = Math.abs(trackCenter - cardCenter);
+        const signedDistance = cardCenter - trackCenter; // + = card is right of center
+        const distance = Math.abs(signedDistance);
         const normalized = Math.min(distance / card.clientWidth, 1);
-        card.style.transform = `scale(${1 - normalized * 0.15})`;
-        card.style.opacity = `${1 - normalized * 0.55}`;
+        const scale = 1 - normalized * 0.15;
+        const opacity = 1 - normalized * 0.55;
+        // Cards right of center tilt one way, left of center tilt the
+        // other — this is what creates the "fanning" coverflow look.
+        const rotateY = -Math.sign(signedDistance) * normalized * 35;
+        card.style.transform = `rotateY(${rotateY}deg) scale(${scale})`;
+        card.style.opacity = `${opacity}`;
       });
       ticking = false;
     };
@@ -149,20 +159,17 @@ export default function RolesCarousel() {
   return (
     <section
       id="roles"
-      className="px-6 py-20 md:px-10"
-      style={{ backgroundColor: "#0F1115" }}
+      className="px-6 py-20 md:px-10 bg-background"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
       <div className="mx-auto max-w-5xl">
-        <p className="text-xs uppercase tracking-wide" style={{ color: "#2FDD79" }}>
-          {t("RolesCarousel.eyebrow")}
-        </p>
-        <h2 className={`${quicksand.className} mt-2 text-3xl font-semibold`} style={{ color: "#F5F7FA" }}>
+        <p className="text-xs uppercase tracking-wide text-spring">{t("RolesCarousel.eyebrow")}</p>
+        <h2 className={`${quicksand.className} mt-2 text-3xl font-semibold text-foreground`}>
           {t("RolesCarousel.headline")}
         </h2>
 
-        <div className="relative mt-10">
+        <div className="relative mt-10" style={{ perspective: "1200px" }}>
           <div
             ref={trackRef}
             className="flex overflow-x-auto scroll-smooth pb-4"
@@ -172,13 +179,11 @@ export default function RolesCarousel() {
               <div
                 key={i}
                 ref={(el) => { cardRefs.current[i] = el; }}
-                className="shrink-0 rounded-3xl p-8"
+                className="shrink-0 rounded-3xl p-8 bg-card border border-border"
                 style={{
                   width: `${CARD_WIDTH_PCT}%`,
                   maxWidth: MAX_CARD_WIDTH,
                   scrollSnapAlign: "center",
-                  backgroundColor: "#15181D",
-                  border: "1px solid #2A2D33",
                   boxShadow: `0 20px 45px ${role.color}22`,
                   transition: `transform ${TRANSITION_MS}ms ease, opacity ${TRANSITION_MS}ms ease`,
                 }}
@@ -189,10 +194,10 @@ export default function RolesCarousel() {
                 >
                   <role.icon size={26} style={{ color: role.color }} />
                 </div>
-                <h3 className={`${quicksand.className} mt-6 text-2xl font-semibold`} style={{ color: "#F5F7FA" }}>
+                <h3 className={`${quicksand.className} mt-6 text-2xl font-semibold text-foreground`}>
                   {role.title}
                 </h3>
-                <p className="mt-3 text-base leading-relaxed" style={{ color: "#9AA0AC" }}>
+                <p className="mt-3 text-base leading-relaxed text-muted-foreground">
                   {role.body}
                 </p>
                 <a
@@ -209,16 +214,14 @@ export default function RolesCarousel() {
           <button
             onClick={prev}
             aria-label="Previous"
-            className="flex absolute left-1 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full items-center justify-center z-10"
-            style={{ backgroundColor: "#0F1115", border: "1px solid #34383F", color: "#D6D9DE" }}
+            className="flex absolute left-1 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full items-center justify-center z-10 bg-background border border-border text-foreground/80"
           >
             <ChevronLeft size={18} />
           </button>
           <button
             onClick={next}
             aria-label="Next"
-            className="flex absolute right-1 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full items-center justify-center z-10"
-            style={{ backgroundColor: "#0F1115", border: "1px solid #34383F", color: "#D6D9DE" }}
+            className="flex absolute right-1 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full items-center justify-center z-10 bg-background border border-border text-foreground/80"
           >
             <ChevronRight size={18} />
           </button>
@@ -234,7 +237,7 @@ export default function RolesCarousel() {
               style={{
                 width: i === realIndex ? 16 : 6,
                 height: 6,
-                backgroundColor: i === realIndex ? role.color : "#34383F",
+                backgroundColor: i === realIndex ? role.color : "var(--border)",
               }}
             />
           ))}

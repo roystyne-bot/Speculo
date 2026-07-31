@@ -111,7 +111,7 @@ function FeedbackSection({ title, items, greeny }: { title: string; items: strin
       </h2>
       <ul className="mt-2 space-y-1.5">
         {items.map((item, i) => (
-          <li key={i} className={`text-sm ${greeny ? "text-spring-deep" : "text-onyx"} pl-3 border-l-2 border-gray-700`}>
+          <li key={i} className={`text-sm text-foreground pl-3 border-l-2 border-gray-700`}>
             {item}
           </li>
         ))}

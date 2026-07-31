@@ -27,25 +27,22 @@ export default function Footer() {
   }));
 
   return (
-    <footer className="px-6 pt-20 pb-10 md:px-10" style={{ backgroundColor: "#0F1115", borderTop: "1px solid #1D2026" }}>
+    <footer className="px-6 pt-20 pb-10 md:px-10 bg-background border-t border-border">
       <div className="mx-auto max-w-5xl">
         <div className="grid md:grid-cols-2 gap-12">
           <div>
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full" style={{ backgroundColor: "#2FDD79" }} />
-              <span className={`${quicksand.className} text-3xl font-bold`} style={{ color: "#F5F7FA" }}>
-                Speculo
-              </span>
+              <div className="w-3 h-3 rounded-full bg-spring" />
+              <span className={`${quicksand.className} text-3xl font-bold text-foreground`}>Speculo</span>
             </div>
-            <p className="mt-5 text-base italic leading-relaxed max-w-sm" style={{ color: "#9AA0AC" }}>
+            <p className="mt-5 text-base italic leading-relaxed max-w-sm text-muted-foreground">
               "{t("Footer.quote")}"
             </p>
             <a
               href="https://github.com/roystyne-bot"
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-6 inline-flex w-9 h-9 rounded-lg items-center justify-center"
-              style={{ backgroundColor: "#15181D", border: "1px solid #2A2D33", color: "#D6D9DE" }}
+              className="mt-6 inline-flex w-9 h-9 rounded-lg items-center justify-center bg-card border border-border text-foreground/80"
               aria-label="GitHub"
             >
               <SiGithub size={16} />
@@ -54,7 +51,7 @@ export default function Footer() {
 
           <div className="grid grid-cols-2 gap-8 md:justify-items-end">
             <div>
-              <p className="text-xs uppercase tracking-wide" style={{ color: "#5A5F68" }}>
+              <p className="text-xs uppercase tracking-wide text-muted-foreground">
                 {t("Footer.product")}
               </p>
               <ul className="mt-4 space-y-2.5">
@@ -62,8 +59,7 @@ export default function Footer() {
                   <li key={link.href}>
                     <a
                       href={link.href}
-                      className="text-sm transition-colors duration-150 hover:text-white"
-                      style={{ color: "#9AA0AC" }}
+                      className="text-sm text-muted-foreground transition-colors duration-150 hover:text-foreground"
                     >
                       {link.label}
                     </a>
@@ -72,7 +68,7 @@ export default function Footer() {
               </ul>
             </div>
             <div>
-              <p className="text-xs uppercase tracking-wide" style={{ color: "#5A5F68" }}>
+              <p className="text-xs uppercase tracking-wide text-muted-foreground">
                 {t("Footer.resources")}
               </p>
               <ul className="mt-4 space-y-2.5">
@@ -80,8 +76,7 @@ export default function Footer() {
                   <li key={link.href}>
                     <a
                       href={link.href}
-                      className="text-sm transition-colors duration-150 hover:text-white"
-                      style={{ color: "#9AA0AC" }}
+                      className="text-sm text-muted-foreground transition-colors duration-150 hover:text-foreground"
                     >
                       {link.label}
                     </a>
@@ -92,8 +87,8 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-16 pt-6 flex justify-between items-center" style={{ borderTop: "1px solid #1D2026" }}>
-          <p className="text-xs" style={{ color: "#5A5F68" }}>
+        <div className="mt-16 pt-6 flex justify-between items-center border-t border-border">
+          <p className="text-xs text-muted-foreground">
             Speculo © {new Date().getFullYear()}. {t("Footer.rights")}
           </p>
         </div>

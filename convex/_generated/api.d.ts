@@ -8,10 +8,12 @@
  * @module
  */
 
+import type * as audio from "../audio.js";
 import type * as auth from "../auth.js";
 import type * as debriefs from "../debriefs.js";
 import type * as http from "../http.js";
 import type * as lib_groq from "../lib/groq.js";
+import type * as lib_groqAudio from "../lib/groqAudio.js";
 import type * as messages from "../messages.js";
 import type * as prompts_Questionprompt from "../prompts/Questionprompt.js";
 import type * as prompts_Scoringprompt from "../prompts/Scoringprompt.js";
@@ -26,10 +28,12 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  audio: typeof audio;
   auth: typeof auth;
   debriefs: typeof debriefs;
   http: typeof http;
   "lib/groq": typeof lib_groq;
+  "lib/groqAudio": typeof lib_groqAudio;
   messages: typeof messages;
   "prompts/Questionprompt": typeof prompts_Questionprompt;
   "prompts/Scoringprompt": typeof prompts_Scoringprompt;

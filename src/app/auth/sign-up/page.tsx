@@ -50,7 +50,7 @@ export default function SignUpPage() {
       <div className="w-full max-w-[440px]">
 
        
-        <div className="flex text-2xl items-center mb-8 justify-center">
+        <div className="flex text-2xl text-background items-center mb-8 justify-center">
           
           <span className="text-spring font-bold font-serif text-3xl tracking-tight">
             S
@@ -59,7 +59,13 @@ export default function SignUpPage() {
         </div>
 
         {/* Card body */}
-        <div className="bg-onyx-light border border-white/10 rounded-2xl overflow-hidden">
+        <div className="bg-foreground border border-white/10 rounded-2xl overflow-hidden"
+         style={{
+                  
+                  boxShadow: `0 2px 15px #808080`,
+                  
+                }}
+                >
 
           {/* Accent bar */}
           
@@ -67,10 +73,10 @@ export default function SignUpPage() {
 
           
             <div className="mb-7">
-              <h1 className="text-xl font-bold text-[#E8EDF8] tracking-tight mb-1.5">
+              <h1 className="text-xl font-bold text-background tracking-tight mb-1.5">
                 Create your account
               </h1>
-              <p className="text-[13px] text-[#6B7899]">
+              <p className="text-[13px] text-background">
                 Start practising interviews with AI today.
               </p>
             </div>

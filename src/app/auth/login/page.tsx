@@ -48,7 +48,7 @@ export default function LoginPage() {
       <div className={`w-full max-w-[440px] ${quicksand.className}`}>
 
         
-        <div className="flex text-2xl items-center mb-8 justify-center">
+        <div className="flex text-2xl text-background items-center mb-8 justify-center">
           
           <span className="text-spring font-bold font-serif text-3xl tracking-tight">
             S
@@ -57,19 +57,24 @@ export default function LoginPage() {
         </div>
 
         
-        <div className="bg-onyx-light border border-white/10 rounded-2xl overflow-hidden">
+        <div className="bg-foreground rounded-2xl overflow-hidden"
+         style={{
+                  
+                  boxShadow: `0 2px 15px #808080`,
+                  
+                }}
 
-          
+          >
          
 
           <div className="p-8">
 
            
-            <div className="mb-7 font-sans">
-              <h1 className="text-xl font-bold text-white tracking-tight mb-1.5">
+            <div className="mb-7 font-sans text-background">
+              <h1 className="text-xl font-bold tracking-tight mb-1.5">
                 Welcome back
               </h1>
-              <p className="text-[13px] text-white/40">
+              <p className="text-[13px]">
                 Sign in to continue your interview practice.
               </p>
             </div>
@@ -87,7 +92,7 @@ export default function LoginPage() {
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-[10px] font-sans uppercase tracking-widest text-white/40">
+                    <label className="text-[10px] font-sans uppercase tracking-widest text-background">
                       Email address
                     </label>
                     <input
@@ -121,7 +126,7 @@ export default function LoginPage() {
                 render={({ field, fieldState }) => (
                   <div className="flex flex-col gap-1.5">
                     <div className="flex items-center justify-between">
-                      <label className="text-[10px] font-sans uppercase tracking-widest text-white/40">
+                      <label className="text-[10px] font-sans uppercase tracking-widest text-background">
                         Password
                       </label>
                       <a
@@ -192,15 +197,15 @@ export default function LoginPage() {
 
             {/* Divider */}
             <div className="flex items-center gap-3 my-6">
-              <div className="flex-1 h-px bg-white/10" />
-              <span className="text-[10px] font-sans text-white/20 uppercase tracking-widest">
+              <div className="flex-1 h-px bg-background" />
+              <span className="text-[10px] font-sans text-background uppercase tracking-widest">
                 or
               </span>
-              <div className="flex-1 h-px bg-white/10" />
+              <div className="flex-1 h-px bg-background" />
             </div>
 
             {/* Sign up link */}
-            <p className="text-center text-[12px] text-white/40">
+            <p className="text-center text-[12px] text-background">
               {`Don't have an account?`}{" "}
               <a
                 href="/auth/sign-up"
@@ -214,7 +219,7 @@ export default function LoginPage() {
         </div>
 
         {/* Bottom note */}
-        <p className="text-center text-[11px] text-white/20 font-sans mt-6">
+        <p className="text-center text-[11px] text-background font-sans mt-6">
           Having trouble?{" "}
           <a href="/support" className="underline hover:text-white/40 transition-colors">
             Contact support

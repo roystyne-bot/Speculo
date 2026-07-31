@@ -5,13 +5,25 @@
 // rather than letting a malformed response silently corrupt a DB write.
 
 const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
-const MODEL = "llama-3.1-8b-instant";
+const DEFAULT_MODEL = "llama-3.1-8b-instant";
 
-export async function callGroqJSON<T>(systemPrompt: string, userPrompt: string): Promise<T> {
+type CallOptions = {
+  model?: string;
+  temperature?: number;
+};
+
+export async function callGroqJSON<T>(
+  systemPrompt: string,
+  userPrompt: string,
+  options: CallOptions = {},
+): Promise<T> {
   const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) {
     throw new Error("GROQ_API_KEY is not set on the Convex deployment");
   }
+
+  const model = options.model ?? DEFAULT_MODEL;
+  const temperature = options.temperature ?? 0.7;
 
   const response = await fetch(GROQ_URL, {
     method: "POST",
@@ -20,19 +32,19 @@ export async function callGroqJSON<T>(systemPrompt: string, userPrompt: string):
       Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
-      model: MODEL,
+      model,
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt },
       ],
       response_format: { type: "json_object" },
-      temperature: 0.7,
+      temperature,
     }),
   });
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`Groq request failed (${response.status}): ${errorText}`);
+    throw new Error(`Groq request failed (${response.status}) using model "${model}": ${errorText}`);
   }
 
   const data = await response.json();

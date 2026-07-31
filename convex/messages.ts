@@ -140,6 +140,22 @@ export const generateNextQuestion = action({
       sessionId: args.sessionId,
     });
 
+    // Idempotency guard — if the last question hasn't been answered or
+    // skipped yet, this is a duplicate call (e.g. React Strict Mode firing
+    // the "generate first question" effect twice), not a genuine request
+    // for the next one. Return the existing pending question instead of
+    // creating a second one, which is what caused the "starts at question 2"
+    // bug — two questions got created, and the UI showed the latest one.
+    const lastMessage = existing[existing.length - 1];
+    const hasPendingQuestion = lastMessage && lastMessage.answer === undefined && !lastMessage.skipped;
+    if (hasPendingQuestion) {
+      return {
+        questionNumber: lastMessage.questionNumber,
+        question: lastMessage.question,
+        questionTag: lastMessage.questionTag,
+      };
+    }
+
     const nextQuestionNumber = existing.length + 1;
     if (nextQuestionNumber > TOTAL_QUESTIONS) {
       throw new Error("All questions have already been generated for this session");
@@ -210,7 +226,14 @@ export const submitAnswer = action({
       clarity: number;
       depth: number;
       feedback: string;
-    }>(system, user);
+    }>(system, user, {
+      // Scoring needs actual reasoning about correctness, not speed —
+      // llama-3.1-8b-instant (used for question generation) is fast but
+      // prone to rewarding fluent-sounding wrong answers. A larger model
+      // plus low temperature (deterministic, not "creative") is the fix.
+      model: "llama-3.3-70b-versatile",
+      temperature: 0.2,
+    });
 
     await ctx.runMutation(internal.messages._updateMessageScore, {
       messageId: args.messageId,

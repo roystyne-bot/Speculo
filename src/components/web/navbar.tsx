@@ -37,8 +37,14 @@ export default function Navbar() {
     window.location.href = "/";
   };
 
-  const links = isAuthenticated ? APP_LINKS : MARKETING_LINKS;
+  function handleClickOut(){
+    setMenuOpen(false);
+  }
+  //Wanna close the nav when clicking anywhere except nav itself
+  //document.body.addEventListener('click', handleClickOut);
 
+  const links = isAuthenticated ? APP_LINKS : MARKETING_LINKS;
+ 
   return (
     <nav className="fixed top-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-3xl z-50">
       <div

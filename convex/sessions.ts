@@ -150,6 +150,34 @@ export const listRecent = query({
   },
 });
 
+
+// Consecutive calendar days (UTC) with at least one completed session,
+// counting backward from today. If today doesn't have one yet, counting
+// starts from yesterday instead — otherwise a genuine ongoing streak would
+// incorrectly show 0 just because today's practice hasn't happened yet.
+function computeStreak(completedAtTimestamps: number[]): number {
+  if (completedAtTimestamps.length === 0) return 0;
+
+  const toKey = (d: Date) => d.toISOString().slice(0, 10);
+  const dayKeys = new Set(completedAtTimestamps.map((ts) => toKey(new Date(ts))));
+
+  const today = new Date();
+  today.setUTCHours(0, 0, 0, 0);
+
+  const cursor = new Date(today);
+  if (!dayKeys.has(toKey(cursor))) {
+    cursor.setUTCDate(cursor.getUTCDate() - 1);
+  }
+
+  let streak = 0;
+  while (dayKeys.has(toKey(cursor))) {
+    streak++;
+    cursor.setUTCDate(cursor.getUTCDate() - 1);
+  }
+
+  return streak;
+}
+
 export const getStats = query({
   args: {},
   handler: async (ctx) => {
@@ -169,10 +197,10 @@ export const getStats = query({
         : 0;
     const best = scored.length > 0 ? Math.max(...scored.map((s) => s.totalScore ?? 0)) : 0;
 
-    // Streak logic is a placeholder — needs a real definition (consecutive
-    // calendar days with at least one completed session). Flagging rather
-    // than guessing at "days" math that could be silently wrong.
-    const streak = 0;
+    const completedTimestamps = sessions
+      .filter((s) => s.status === "completed" && s.completedAt !== undefined)
+      .map((s) => s.completedAt!);
+    const streak = computeStreak(completedTimestamps);
 
     return { total, average, best, streak };
   },

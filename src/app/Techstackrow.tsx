@@ -14,29 +14,21 @@ const STACK = [
   { name: "Next.js", render: () => <SiNextdotjs size={26} color="#E8EDF8" /> },
   { name: "Tailwind CSS", render: () => <SiTailwindcss size={26} color="#38BDF8" /> },
   { name: "Groq", render: () => <Groq size={26} className="text-spring"/> },
-  { name: "Convex", render: () => <SiConvex size={26} className="text-pink-800"/> },
+  { name: "Convex", render: () => <SiConvex size={26} className="text-violet-600"/> },
   { name: "Better Auth", render: null },
 ];
 
 function StackItem({ name, render }: { name: string; render: (() => React.ReactNode) | null }) {
   return (
-    <div
-      className="flex items-center gap-3 shrink-0 mx-2.5 px-6 py-4 rounded-xl"
-      style={{ backgroundColor: "#15181D", border: "1px solid #2A2D33" }}
-    >
+    <div className="flex items-center gap-3 shrink-0 mx-2.5 px-6 py-4 rounded-xl bg-card border border-border">
       {render ? (
         render()
       ) : (
-        <div
-          className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold"
-          style={{ backgroundColor: "#1D2026", color: "#D6D9DE" }}
-        >
+        <div className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold bg-secondary text-foreground/80">
           {name[0]}
         </div>
       )}
-      <span className="text-base font-medium whitespace-nowrap" style={{ color: "#E8EDF8" }}>
-        {name}
-      </span>
+      <span className="text-base font-medium whitespace-nowrap text-foreground">{name}</span>
     </div>
   );
 }
@@ -44,8 +36,8 @@ function StackItem({ name, render }: { name: string; render: (() => React.ReactN
 export default function TechStackRow() {
   const { t } = useLanguage();
   return (
-    <section className="py-14" style={{ backgroundColor: "#0F1115" }}>
-      <p className="text-center text-xs uppercase tracking-wide mb-6" style={{ color: "#5A5F68" }}>
+    <section className="py-14 bg-background">
+      <p className="text-center text-xs uppercase tracking-wide mb-6 text-muted-foreground">
         {t("TechStackRow.builtWith")}
       </p>
 
