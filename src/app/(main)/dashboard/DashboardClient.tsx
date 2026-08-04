@@ -1,7 +1,7 @@
 // app/dashboard/DashboardClient.tsx
 "use client";
 
-import { usePreloadedQuery, Preloaded } from "convex/react";
+import { usePreloadedQuery, Preloaded, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { ReminderSettings } from "@/components/web/ReminderSettings";
 import { useLanguage } from "@/components/web/LanguageProvider";
@@ -25,6 +25,7 @@ type Props = {
   preloadedStats: Preloaded<typeof api.sessions.getStats>;
 };
 
+
 export function DashboardClient({ preloadedSessions, preloadedStats }: Props) {
   // Resolves instantly with the server-preloaded data on first render
   // never undefined, no loading state needed here. Live-updates after
@@ -32,6 +33,7 @@ export function DashboardClient({ preloadedSessions, preloadedStats }: Props) {
   // elsewhere), same as a normal useQuery would.
   const sessions = usePreloadedQuery(preloadedSessions);
   const stats = usePreloadedQuery(preloadedStats);
+  const streak = stats.streak ?? 0;
 
   return (
     <div className={`min-h-screen bg-background px-6 py-10 md:px-10 ${quicksand.className}`}>
@@ -78,7 +80,11 @@ function StatsRow({
     { label: `${t("Dashboard.totalInterviews")}`, value: stats.total },
     { label: `${t("Dashboard.averageScore")}`, value: `${stats.average}%` },
     { label: `${t("Dashboard.bestScore")}`, value: `${stats.best}%` },
-    { label: `${t("Dashboard.series")}`, value: `${stats.streak} days` },
+    { label: `${t("Dashboard.series")}`, value: (
+      <p>
+        {stats.streak} {stats.streak === 1 ? "day" : "days"} streak
+      </p>
+    ) },
   ];
 
   

@@ -150,7 +150,6 @@ export const listRecent = query({
   },
 });
 
-
 // Consecutive calendar days (UTC) with at least one completed session,
 // counting backward from today. If today doesn't have one yet, counting
 // starts from yesterday instead — otherwise a genuine ongoing streak would

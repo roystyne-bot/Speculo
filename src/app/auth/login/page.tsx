@@ -48,7 +48,7 @@ export default function LoginPage() {
       <div className={`w-full max-w-[440px] ${quicksand.className}`}>
 
         
-        <div className="flex text-2xl text-background items-center mb-8 justify-center">
+        <div className="flex text-2xl text-foreground items-center mb-8 justify-center">
           
           <span className="text-spring font-bold font-serif text-3xl tracking-tight">
             S
@@ -70,7 +70,7 @@ export default function LoginPage() {
           <div className="p-8">
 
            
-            <div className="mb-7 font-sans text-background">
+            <div className="mb-7 font-sans text-foreground">
               <h1 className="text-xl font-bold tracking-tight mb-1.5">
                 Welcome back
               </h1>
@@ -92,7 +92,7 @@ export default function LoginPage() {
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-[10px] font-sans uppercase tracking-widest text-background">
+                    <label className="text-[10px] font-sans uppercase tracking-widest text-foreground">
                       Email address
                     </label>
                     <input
@@ -126,7 +126,7 @@ export default function LoginPage() {
                 render={({ field, fieldState }) => (
                   <div className="flex flex-col gap-1.5">
                     <div className="flex items-center justify-between">
-                      <label className="text-[10px] font-sans uppercase tracking-widest text-background">
+                      <label className="text-[10px] font-sans uppercase tracking-widest text-foreground">
                         Password
                       </label>
                       <a
