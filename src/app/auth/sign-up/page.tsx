@@ -63,7 +63,6 @@ export default function SignUpPage() {
          style={{
                   
                   boxShadow: `0 2px 15px #808080`,
-                  
                 }}
                 >
 
