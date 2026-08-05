@@ -45,3 +45,18 @@ export const getUserName = query({
     return user?.name;
   },
 });
+
+export const getCurrentUserName = query({
+  args: {},
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return null;
+
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_authId", (q) => q.eq("authId", identity.subject))
+      .first();
+
+    return user?.name ?? null;
+  },
+});

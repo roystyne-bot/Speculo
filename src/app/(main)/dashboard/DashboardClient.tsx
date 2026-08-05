@@ -35,10 +35,13 @@ export function DashboardClient({ preloadedSessions, preloadedStats }: Props) {
   const stats = usePreloadedQuery(preloadedStats);
   const streak = stats.streak ?? 0;
 
+  
+  const currentUserName = useQuery(api.users.getCurrentUserName);
+
   return (
     <div className={`min-h-screen bg-background px-6 py-10 md:px-10 ${quicksand.className}`}>
       <div className="mx-auto max-w-6xl space-y-8">
-        <DashboardHeader />
+        <DashboardHeader username={currentUserName ?? undefined}/>
         <StatsRow stats={stats} />
          <ReminderSettings />
         <RecentSessions sessions={sessions} />
@@ -47,12 +50,14 @@ export function DashboardClient({ preloadedSessions, preloadedStats }: Props) {
   );
 }
 
-function DashboardHeader() {
+function DashboardHeader({ username }: { username?: string }) {
     const { t } = useLanguage();
   return (
     <div className="flex flex-col pt-20 items-start justify-between gap-4 sm:flex-row sm:items-center">
       <div>
-        <h1 className={`${quicksand.className} text-3xl font-semibold text-foreground`}>{t("Dashboard.title")}</h1>
+        <h1 className={`${quicksand.className} text-3xl font-semibold text-foreground`}>
+          {username ? `Welcome, ${username}` : t("Dashboard.title")}
+        </h1>
         <p className="mt-1 text-sm text-muted-foreground">
           {t("Dashboard.describe")}
         </p>
@@ -80,14 +85,11 @@ function StatsRow({
     { label: `${t("Dashboard.totalInterviews")}`, value: stats.total },
     { label: `${t("Dashboard.averageScore")}`, value: `${stats.average}%` },
     { label: `${t("Dashboard.bestScore")}`, value: `${stats.best}%` },
-    { label: `${t("Dashboard.series")}`, value: (
-      <p>
-        {stats.streak} {stats.streak === 1 ? "day" : "days"} streak
-      </p>
-    ) },
+    {
+      label: `${t("Dashboard.series")}`,
+      value: `${stats.streak} ${stats.streak === 1 ? "day" : "days"}`,
+    },
   ];
-
-  
 
   return (
     <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
