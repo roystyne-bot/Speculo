@@ -48,7 +48,7 @@ export default function SignUpPage() {
 
       <div className="w-full max-w-[440px]">
 
-        <div className="flex text-2xl text-foreground items-center mb-8 justify-center">
+        <div className="flex text-2xl text-background items-center mb-8 justify-center">
           <span className="text-spring font-bold font-serif text-3xl tracking-tight">
             S
           </span>
