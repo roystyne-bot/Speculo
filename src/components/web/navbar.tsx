@@ -62,7 +62,7 @@ export default function Navbar() {
           className="flex items-center text-xl font-bold shrink-0 text-foreground"
         >
           <Image
-          src=".\icon.svg"
+          src="/icon.svg"
           alt="Speculo's Logo"
           width={35}
           height={35}
