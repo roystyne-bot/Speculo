@@ -1,5 +1,10 @@
 import React from "react";
 import { useState } from "react";
+import { Quicksand } from "next/font/google";
+
+
+const quicksand = Quicksand({ subsets: ["latin"], weight: ["500", "600", "700"] });
+
 
 
 const FAQS = [
@@ -34,12 +39,10 @@ export default function SpeculoFAQ() {
         background: "#0F1115",
         minHeight: "100vh",
         padding: "72px 20px",
-        fontFamily: "'Space Grotesk', sans-serif",
+        fontFamily: quicksand.style.fontFamily,
       }}
     >
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
-      `}</style>
+      
 
       <div style={{ maxWidth: 720, margin: "0 auto" }}>
         <p
