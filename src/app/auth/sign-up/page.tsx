@@ -24,7 +24,7 @@ export default function SignUpPage() {
   const form = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
     defaultValues: { name: "", email: "", password: "" },
-    mode: "onChange", 
+    mode: "onChange",
   });
 
   function onSubmit(data: z.infer<typeof signUpSchema>) {
@@ -46,12 +46,9 @@ export default function SignUpPage() {
   return (
     <div className={`min-h-screen flex items-center justify-center px-4 py-12 bg-white dark:bg-[#0B0D11] ${quicksand.className}`}>
 
-
       <div className="w-full max-w-[440px]">
 
-
         <div className="flex text-2xl text-background items-center mb-8 justify-center">
-
           <span className="text-spring font-bold font-serif text-3xl tracking-tight">
             S
           </span>
@@ -61,10 +58,7 @@ export default function SignUpPage() {
         {/* Card body */}
         <div className="bg-white dark:bg-background border border-gray-200 dark:border-white/10 rounded-2xl overflow-hidden shadow-lg shadow-gray-200/70 dark:shadow-black/40">
 
-          {/* Accent bar */}
-
           <div className="p-8">
-
 
             <div className="mb-7">
               <h1 className="text-xl font-bold text-background tracking-tight mb-1.5">
@@ -82,7 +76,7 @@ export default function SignUpPage() {
               noValidate
             >
 
-              {/* ── Full name ── */}
+              {/* Full name */}
               <Controller
                 name="name"
                 control={form.control}
@@ -114,7 +108,7 @@ export default function SignUpPage() {
                 )}
               />
 
-              {/* Email ─*/}
+              {/* Email */}
               <Controller
                 name="email"
                 control={form.control}
@@ -147,7 +141,7 @@ export default function SignUpPage() {
                 )}
               />
 
-              {/* Password  */}
+              {/* Password */}
               <Controller
                 name="password"
                 control={form.control}
@@ -181,7 +175,6 @@ export default function SignUpPage() {
                       </button>
                     </div>
 
-                    {/* Strength indicator */}
                     {field.value && (
                       <div className="flex gap-1 mt-0.5">
                         {[1, 2, 3, 4].map((i) => (
@@ -211,7 +204,7 @@ export default function SignUpPage() {
                 )}
               />
 
-              {/* ── Submit ── */}
+              {/* Submit */}
               <button
                 type="submit"
                 disabled={isPending}
@@ -248,8 +241,8 @@ export default function SignUpPage() {
             {/* Sign in link */}
             <p className="text-center text-[12px] text-gray-500 dark:text-gray-400 font-mono">
               Already have an account?{" "}
-              <a
-                href="/auth/login"
+              
+              <a href="/auth/login"
                 className="text-spring hover:text-gray-900 dark:hover:text-[#E8EDF8] transition-colors font-semibold"
               >
                 Sign in

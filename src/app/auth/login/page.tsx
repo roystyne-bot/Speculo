@@ -57,7 +57,7 @@ export default function LoginPage() {
         </div>
 
         
-        <div className="bg-foreground rounded-2xl overflow-hidden"
+        <div className="bg-white dark:bg-background border border-gray-200 dark:border-white/10 rounded-2xl overflow-hidden"
          style={{
                   
                   boxShadow: `0 2px 15px #808080`,
@@ -74,7 +74,7 @@ export default function LoginPage() {
               <h1 className="text-xl font-bold tracking-tight mb-1.5">
                 Welcome back
               </h1>
-              <p className="text-[13px]">
+              <p className="text-[13px] text-gray-500 dark:text-inherit">
                 Sign in to continue your interview practice.
               </p>
             </div>
@@ -130,7 +130,7 @@ export default function LoginPage() {
                         Password
                       </label>
                       
-                        <a href="/auth/forgot-password"
+                      <a href="/auth/forgot-password"
                         className="text-[10px] font-sans text-gray-400 dark:text-white/30 hover:text-spring transition-colors"
                       >
                         Forgot password?
@@ -197,18 +197,18 @@ export default function LoginPage() {
 
             {/* Divider */}
             <div className="flex items-center gap-3 my-6">
-              <div className="flex-1 h-px bg-background" />
-              <span className="text-[10px] font-sans text-background uppercase tracking-widest">
+              <div className="flex-1 h-px bg-gray-200 dark:bg-white/10" />
+              <span className="text-[10px] font-sans text-gray-400 dark:text-white/30 uppercase tracking-widest">
                 or
               </span>
-              <div className="flex-1 h-px bg-background" />
+              <div className="flex-1 h-px bg-gray-200 dark:bg-white/10" />
             </div>
 
             {/* Sign up link */}
-            <p className="text-center text-[12px] text-background">
+            <p className="text-center text-[12px] text-gray-500 dark:text-gray-400">
               {`Don't have an account?`}{" "}
               
-                <a href="/auth/sign-up"
+              <a href="/auth/sign-up"
                 className="text-spring hover:text-spring-pale transition-colors font-semibold"
               >
                 Create one
@@ -219,9 +219,9 @@ export default function LoginPage() {
         </div>
 
         {/* Bottom note */}
-        <p className="text-center text-[11px] text-background font-sans mt-6">
+        <p className="text-center text-[11px] text-gray-500 dark:text-gray-400 font-sans mt-6">
           Having trouble?{" "}
-          <a href="/support" className="underline hover:text-gray-500 dark:hover:text-white/40 transition-colors">
+          <a href="/support" className="underline hover:text-gray-700 dark:hover:text-white/40 transition-colors">
             Contact support
           </a>
         </p>
