@@ -19,7 +19,7 @@ export function LocaleSwitcher() {
     <div className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center bg-green-600 gap-1 px-3 py-1.5 text-sm rounded-lg text-foreground/80"
+        className="flex items-center bg-green-600 gap-1 px-1.5 py-1.5 text-sm rounded-lg text-foreground/80"
       >
         {current.label}
         <ChevronDown size={14} />
