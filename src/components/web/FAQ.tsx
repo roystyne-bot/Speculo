@@ -35,8 +35,8 @@ export default function SpeculoFAQ() {
 
   return (
     <section
+    className={`relative overflow-hidden bg-background px-6 md:px-10 ${quicksand.className}`}
       style={{
-        background: "#0F1115",
         minHeight: "100vh",
         padding: "72px 20px",
         fontFamily: quicksand.style.fontFamily,
@@ -46,11 +46,11 @@ export default function SpeculoFAQ() {
 
       <div style={{ maxWidth: 720, margin: "0 auto" }}>
         <p
+        className="text-foreground/80 font-semibold tracking-widest uppercase"
           style={{
             color: "#2FDD79",
             fontSize: 13,
             letterSpacing: 3,
-            textTransform: "uppercase",
             marginBottom: 16,
             fontWeight: 500,
           }}
@@ -58,8 +58,8 @@ export default function SpeculoFAQ() {
           FAQ
         </p>
         <h2
+          className="text-foreground font-semibold tracking-tight"
           style={{
-            color: "#F5F6F7",
             fontSize: "clamp(36px, 6vw, 56px)",
             fontWeight: 700,
             lineHeight: 1.05,
@@ -70,8 +70,8 @@ export default function SpeculoFAQ() {
           Questions, answered.
         </h2>
         <p
+          className="text-foreground/80"
           style={{
-            color: "#8A8F98",
             fontSize: 16,
             lineHeight: 1.6,
             marginBottom: 48,
@@ -88,8 +88,8 @@ export default function SpeculoFAQ() {
             return (
               <div
                 key={i}
+                className="bg-gray-100 dark:bg-[#16181D] border border-gray-200 dark:border-transparent"
                 style={{
-                  background: "#16181D",
                   borderRadius: 18,
                   overflow: "hidden",
                   transition: "background 0.25s ease",
@@ -110,10 +110,11 @@ export default function SpeculoFAQ() {
                     textAlign: "left",
                   }}
                 >
-                  <div style={{ display: "flex", gap: 20, alignItems: "flex-start" }}>
+                  <div
+                  className={`${quicksand.className} text-foreground`}
+                   style={{ display: "flex", gap: 20, alignItems: "flex-start" }}>
                     <span
                       style={{
-                        fontFamily: "'JetBrains Mono', monospace",
                         fontSize: 28,
                         fontWeight: 600,
                         color: "#2FDD79",
@@ -125,8 +126,8 @@ export default function SpeculoFAQ() {
                       {String(i + 1).padStart(2, "0")}
                     </span>
                     <span
+                      className="text-gray-900 dark:text-[#F5F6F7]"
                       style={{
-                        color: "#F5F6F7",
                         fontSize: 20,
                         fontWeight: 600,
                         lineHeight: 1.35,
@@ -137,6 +138,7 @@ export default function SpeculoFAQ() {
                   </div>
 
                   <span
+                    className={isOpen ? "" : "text-gray-400 dark:text-[#8A8F98]"}
                     style={{
                       flexShrink: 0,
                       width: 28,
@@ -144,7 +146,7 @@ export default function SpeculoFAQ() {
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      color: isOpen ? "#2FDD79" : "#8A8F98",
+                      color: isOpen ? "#2FDD79" : undefined,
                       fontSize: 20,
                       marginTop: 2,
                       transition: "transform 0.25s ease, color 0.25s ease",
@@ -164,8 +166,8 @@ export default function SpeculoFAQ() {
                 >
                   <div style={{ overflow: "hidden" }}>
                     <p
+                      className="text-gray-500 dark:text-[#8A8F98]"
                       style={{
-                        color: "#8A8F98",
                         fontSize: 15,
                         lineHeight: 1.65,
                         padding: "0 24px 26px 88px",

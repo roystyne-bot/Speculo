@@ -44,11 +44,11 @@ export default function SignUpPage() {
   }
 
   return (
-    <div className={`min-h-screen flex items-center justify-center px-4 py-12 bg-white dark:bg-[#0B0D11] ${quicksand.className}`}>
+    <div className={`min-h-screen flex items-center justify-center px-4 py-12 bg-transparent ${quicksand.className}`}>
 
       <div className="w-full max-w-[440px]">
 
-        <div className="flex text-2xl text-background items-center mb-8 justify-center">
+        <div className="flex text-2xl text-foreground items-center mb-8 justify-center">
           <span className="text-spring font-bold font-serif text-3xl tracking-tight">
             S
           </span>
@@ -61,10 +61,10 @@ export default function SignUpPage() {
           <div className="p-8">
 
             <div className="mb-7">
-              <h1 className="text-xl font-bold text-background tracking-tight mb-1.5">
+              <h1 className="text-xl font-bold text-foreground tracking-tight mb-1.5">
                 Create your account
               </h1>
-              <p className="text-[13px] text-gray-500 dark:text-background">
+              <p className="text-[13px] text-gray-500 dark:text-foreground/80">
                 Start practising interviews with AI today.
               </p>
             </div>
