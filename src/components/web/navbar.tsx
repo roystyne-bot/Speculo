@@ -19,7 +19,7 @@ export default function Navbar() {
   const APP_LINKS = [
     { label: t("Navbar.setup"), href: "/interview/setup" },
     { label: t("Navbar.interview"), href: "/interview/session" },
-    { label: t("Navbar.debrief"), href: "/interview/debrief" },
+    { label: t("Navbar.dashboard"), href: "/dashboard" },
   ];
   const MARKETING_LINKS = [
     { label: t("Navbar.roles"), href: "#roles" },
@@ -72,7 +72,7 @@ export default function Navbar() {
           <span className="font-serif text-3xl text-spring">S</span>
           peculo
           </div>
-          <span className={`border-r-2 ml-3 w-[0.5px] h-[25px] border-white ${scrolled ? "visible" : "hidden"}`}>
+          <span className={`border-r-2 ml-3 w-[0.5px] h-[25px] border-foreground ${scrolled ? "visible" : "hidden"}`}>
         </span>
         </a>
 
