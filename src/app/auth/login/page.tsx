@@ -101,16 +101,16 @@ export default function LoginPage() {
                       placeholder="coldy@example.com"
                       autoComplete="email"
                       className={cn(
-                        "w-full bg-onyx border rounded-xl px-4 py-3",
-                        "text-[14px] text-white placeholder:text-white/20",
+                        "w-full bg-gray-50 dark:bg-onyx border rounded-xl px-4 py-3",
+                        "text-[14px] text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/20",
                         "outline-none transition-colors duration-150",
                         fieldState.invalid
                           ? "border-red-500 focus:border-red-400"
-                          : "border-white/10 focus:border-spring"
+                          : "border-gray-300 dark:border-white/10 focus:border-spring"
                       )}
                     />
                     {fieldState.error && (
-                      <p className="flex items-center gap-1.5 text-[11px] text-red-400 font-sans">
+                      <p className="flex items-center gap-1.5 text-[11px] text-red-500 dark:text-red-400 font-sans">
                         <AlertCircle size={11} />
                         {fieldState.error.message}
                       </p>
@@ -129,9 +129,9 @@ export default function LoginPage() {
                       <label className="text-[10px] font-sans uppercase tracking-widest text-foreground">
                         Password
                       </label>
-                      <a
-                        href="/auth/forgot-password"
-                        className="text-[10px] font-sans text-white/30 hover:text-spring transition-colors"
+                      
+                        <a href="/auth/forgot-password"
+                        className="text-[10px] font-sans text-gray-400 dark:text-white/30 hover:text-spring transition-colors"
                       >
                         Forgot password?
                       </a>
@@ -143,25 +143,25 @@ export default function LoginPage() {
                         placeholder="botenayo@32-jk"
                         autoComplete="current-password"
                         className={cn(
-                          "w-full bg-onyx border rounded-xl px-4 py-3 pr-11",
-                          "text-[14px] text-white placeholder:text-white/20",
+                          "w-full bg-gray-50 dark:bg-onyx border rounded-xl px-4 py-3 pr-11",
+                          "text-[14px] text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/20",
                           "outline-none transition-colors duration-150",
                           fieldState.invalid
                             ? "border-red-500/70 focus:border-red-400"
-                            : "border-white/10 focus:border-spring"
+                            : "border-gray-300 dark:border-white/10 focus:border-spring"
                         )}
                       />
                       <button
                         type="button"
                         tabIndex={-1}
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-white/20 hover:text-white/60 transition-colors"
+                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 dark:text-white/20 hover:text-gray-600 dark:hover:text-white/60 transition-colors"
                       >
                         {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                       </button>
                     </div>
                     {fieldState.error && (
-                      <p className="flex items-center gap-1.5 text-[11px] text-red-400 font-sans">
+                      <p className="flex items-center gap-1.5 text-[11px] text-red-500 dark:text-red-400 font-sans">
                         <AlertCircle size={11} />
                         {fieldState.error.message}
                       </p>
@@ -207,8 +207,8 @@ export default function LoginPage() {
             {/* Sign up link */}
             <p className="text-center text-[12px] text-background">
               {`Don't have an account?`}{" "}
-              <a
-                href="/auth/sign-up"
+              
+                <a href="/auth/sign-up"
                 className="text-spring hover:text-spring-pale transition-colors font-semibold"
               >
                 Create one
@@ -221,7 +221,7 @@ export default function LoginPage() {
         {/* Bottom note */}
         <p className="text-center text-[11px] text-background font-sans mt-6">
           Having trouble?{" "}
-          <a href="/support" className="underline hover:text-white/40 transition-colors">
+          <a href="/support" className="underline hover:text-gray-500 dark:hover:text-white/40 transition-colors">
             Contact support
           </a>
         </p>
