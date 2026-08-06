@@ -26,14 +26,36 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://speculo-two.vercel.app"), // ← replace
   title: {
-    default: "Speculo",
+    default: "Speculo — AI Mock Interview Practice",
     template: "%s | Speculo",
   },
-  description: "AI Mock Interview Platform",
-  manifest: "/manifest.webmanifest",
-  applicationName: "Speculo",
+  description:
+    "Practice technical and behavioral interviews with AI-generated questions, real-time scoring, and instant feedback.",
+  keywords: ["mock interview", "AI interview practice", "technical interview prep", "coding interview"],
+  openGraph: {
+    title: "Speculo — AI Mock Interview Practice",
+    description:
+      "Practice technical and behavioral interviews with AI-generated questions, real-time scoring, and instant feedback.",
+    url: "https://speculo-two.vercel.app", // ← replace
+    siteName: "Speculo",
+    type: "website",
+    images: [{ url: "/og-image.png", width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Speculo — AI Mock Interview Practice",
+    description: "Practice interviews with AI. Real-time scoring, instant feedback.",
+    images: ["/og-image.png"],
+  },
+  robots: { index: true, follow: true },
 };
+
+
+    
+
+
 
 export default function RootLayout({
   children,

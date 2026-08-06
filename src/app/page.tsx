@@ -26,7 +26,7 @@ export default function LandingPage() {
       <TechStackRows />
       <WhySpeculo />
       <TakeActions />
-      <SpeculoFAQ />
+      <SpeculoFAQSection />
       <Footer />
     </div>
   );
@@ -153,6 +153,14 @@ function RolesCarouselSection() {
   return(
     <div id="roles">
     <RolesCarousel />
+    </div>
+  )
+}
+
+function SpeculoFAQSection() {
+  return(
+    <div id="faq">
+    <SpeculoFAQ />
     </div>
   )
 }
