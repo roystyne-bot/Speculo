@@ -221,7 +221,7 @@ export default function LoginPage() {
         {/* Bottom note */}
         <p className="text-center text-[11px] text-gray-500 dark:text-gray-400 font-sans mt-6">
           Having trouble?{" "}
-          <a href="/support" className="underline hover:text-gray-700 dark:hover:text-white/40 transition-colors">
+          <a href="/contact" className="underline hover:text-gray-700 dark:hover:text-white/40 transition-colors">
             Contact support
           </a>
         </p>

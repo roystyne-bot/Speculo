@@ -10,9 +10,11 @@
 
 import type * as audio from "../audio.js";
 import type * as auth from "../auth.js";
+import type * as contact from "../contact.js";
 import type * as crons from "../crons.js";
 import type * as debriefs from "../debriefs.js";
 import type * as http from "../http.js";
+import type * as lib_email from "../lib/email.js";
 import type * as lib_groq from "../lib/groq.js";
 import type * as lib_groqAudio from "../lib/groqAudio.js";
 import type * as messages from "../messages.js";
@@ -32,9 +34,11 @@ import type {
 declare const fullApi: ApiFromModules<{
   audio: typeof audio;
   auth: typeof auth;
+  contact: typeof contact;
   crons: typeof crons;
   debriefs: typeof debriefs;
   http: typeof http;
+  "lib/email": typeof lib_email;
   "lib/groq": typeof lib_groq;
   "lib/groqAudio": typeof lib_groqAudio;
   messages: typeof messages;
