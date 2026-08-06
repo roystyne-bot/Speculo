@@ -23,8 +23,8 @@ export default function Navbar() {
   ];
   const MARKETING_LINKS = [
     { label: t("Navbar.roles"), href: "#roles" },
-    { label: t("Navbar.aboutUs"), href: "#AboutUs" },
-    { label: t("Navbar.pricing"), href: "#Pricing" },
+    { label: t("Navbar.faq"), href: "#faq" },
+    { label: t("Navbar.pricing"), href: "#pricing" },
   ];
 
   useEffect(() => {

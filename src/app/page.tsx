@@ -22,7 +22,7 @@ export default function LandingPage() {
       <CursorStar />
       <Navbar />
       <Hero />
-      <RolesCarousel />
+      <RolesCarouselSection />
       <TechStackRows />
       <WhySpeculo />
       <TakeActions />
@@ -40,7 +40,6 @@ function StarAccent({ className = "" }: { className?: string }) {
     </svg>
   );
 }
-
 function Hero() {
   const { t } = useLanguage();
 
@@ -148,6 +147,14 @@ function ScoreItem({ label, value }: { label: string; value: number }) {
       <p className="text-sm font-semibold text-foreground">{value}/10</p>
     </div>
   );
+}
+
+function RolesCarouselSection() {
+  return(
+    <div id="roles">
+    <RolesCarousel />
+    </div>
+  )
 }
 
 function TechStackRows() {

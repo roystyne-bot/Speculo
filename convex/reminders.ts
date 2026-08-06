@@ -32,7 +32,7 @@ export const getMine = query({
 
     return await ctx.db
       .query("reminders")
-      .withIndex("by_userId", (q) => q.eq("userId", user._id))
+      .withIndex("by_userId", (q:any) => q.eq("userId", user._id))
       .unique();
   },
 });
@@ -48,7 +48,7 @@ export const saveSubscription = mutation({
 
     const existing = await ctx.db
       .query("pushSubscriptions")
-      .withIndex("by_endpoint", (q) => q.eq("endpoint", args.endpoint))
+      .withIndex("by_endpoint", (q:any) => q.eq("endpoint", args.endpoint))
       .unique();
 
     if (existing) {
