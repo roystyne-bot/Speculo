@@ -5,31 +5,46 @@ import { DataModel } from "./_generated/dataModel";
 import { query } from "./_generated/server";
 import { betterAuth } from "better-auth/minimal";
 import authConfig from "./auth.config";
+import { internal } from "./_generated/api";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL!;
 
-// The component client has methods needed for integrating Convex with Better Auth,
-// as well as helper methods for general use.
 export const authComponent = createClient<DataModel>(components.betterAuth);
 
 export const createAuth = (ctx: GenericCtx<DataModel>) => {
   return betterAuth({
     baseURL: siteUrl,
     database: authComponent.adapter(ctx),
-    // Configure simple, non-verified email/password to get started
     emailAndPassword: {
       enabled: true,
       requireEmailVerification: false,
     },
-    plugins: [
-      // The Convex plugin is required for Convex compatibility
-      convex({ authConfig }),
-    ],
-  })
-}
+    plugins: [convex({ authConfig })],
+   databaseHooks: {
+  user: {
+    create: {
+      after: async (user) => {
+        if (!("runMutation" in ctx)) {
+          // Hook fired outside an action context — shouldn't happen for
+          // Better Auth's HTTP-driven user creation, but guard anyway
+          // rather than crashing sign-up if it ever does.
+          console.error("ensureUserFromAuth: ctx has no runMutation, skipping");
+          return;
+        }
 
-// Example function for getting the current user
-// Feel free to edit, omit, etc.
+        await ctx.runMutation(internal.users.ensureUserFromAuth, {
+          authId: user.id,
+          name: user.name ?? "",
+          email: user.email ?? "",
+          image: user.image ?? undefined,
+        });
+      },
+    },
+  },
+},
+  });
+};
+
 export const getCurrentUser = query({
   args: {},
   handler: async (ctx) => {

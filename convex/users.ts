@@ -1,5 +1,6 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
+import { internalMutation } from "./_generated/server";
 
 export const createUser = mutation({
   args: {
@@ -60,3 +61,28 @@ export const getCurrentUserName = query({
     return user?.name ?? null;
   },
 });
+
+export const ensureUserFromAuth = internalMutation({
+  args: {
+    authId: v.string(),
+    name: v.string(),
+    email: v.string(),
+    image: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const existing = await ctx.db
+      .query("users")
+      .withIndex("by_authId", (q) => q.eq("authId", args.authId))
+      .unique();
+    if (existing) return existing._id;
+
+    return await ctx.db.insert("users", {
+      authId: args.authId,
+      name: args.name,
+      email: args.email,
+      image: args.image,
+      createdAt: Date.now(),
+    });
+  },
+});
+
