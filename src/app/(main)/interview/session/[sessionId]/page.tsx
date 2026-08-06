@@ -6,6 +6,7 @@ import { useQuery, useAction } from "convex/react";
 import { api } from "../../../../../../convex/_generated/api";
 import { Id } from "../../../../../../convex/_generated/dataModel";
 import { Mic, Square } from "lucide-react";
+import { SpeakButton } from "@/components/web/SpeechButton";
 
 const TOTAL_QUESTIONS = 7;
 
@@ -145,7 +146,10 @@ export default function InterviewSessionPage() {
           <QuestionSkeleton />
         ) : (
           <div className="mt-3 rounded-xl border border-border bg-card p-6">
-            <p className="text-xs text-spring uppercase tracking-wide">{currentMessage.questionTag}</p>
+            <div className="flex items-center justify-between">
+              <p className="text-xs text-spring uppercase tracking-wide">{currentMessage.questionTag}</p>
+              <SpeakButton text={currentMessage.question} />
+            </div>
             <p className="mt-2 text-lg text-foreground">{currentMessage.question}</p>
           </div>
         )}
