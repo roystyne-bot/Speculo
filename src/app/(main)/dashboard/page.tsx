@@ -13,10 +13,15 @@ import { DashboardClient } from "./DashboardClient";
 export default async function DashboardPage() {
   const token = await getToken();
 
+  try {
   const [preloadedSessions, preloadedStats] = await Promise.all([
     preloadQuery(api.sessions.listRecent, {}, { token }),
     preloadQuery(api.sessions.getStats, {}, { token }),
   ]);
-
+  // eslint-disable-next-line react-hooks/error-boundaries
   return <DashboardClient preloadedSessions={preloadedSessions} preloadedStats={preloadedStats} />;
+} catch (err) {
+  console.error("Dashboard preload failed:", err);
+  throw err; // keep behavior the same for now, just log first
+}
 }
