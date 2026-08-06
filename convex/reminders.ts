@@ -25,7 +25,10 @@ async function getSignedInUser(ctx: any) {
 export const getMine = query({
   args: {},
   handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return null;
     const user = await getSignedInUser(ctx);
+    if (!user) return null; //It tells that the is nothing to return, so the user is not signed in or the user is not found in the database
 
     return await ctx.db
       .query("reminders")
