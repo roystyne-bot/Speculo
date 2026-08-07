@@ -6,7 +6,6 @@ import { useState } from "react";
 export default function ContactPage() {
   const submitForm = useAction(api.contact.submitContactForm);
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
-
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setStatus("sending");
