@@ -137,4 +137,17 @@ export default defineSchema({
   })
     .index("by_userId", ["userId"])
     .index("by_enabled", ["enabled"]),
+
+  posts: defineTable({
+  title: v.string(),
+  slug: v.string(),
+  excerpt: v.string(),
+  content: v.string(), 
+  category: v.union(
+    v.literal("update"),
+    v.literal("ranking"),
+    v.literal("announcement")
+  ),
+  publishedAt: v.number(), 
+}).index("by_slug", ["slug"]),
 });

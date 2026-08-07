@@ -10,6 +10,8 @@
 
 import type * as audio from "../audio.js";
 import type * as auth from "../auth.js";
+import type * as blog from "../blog.js";
+import type * as blogAdmin from "../blogAdmin.js";
 import type * as contact from "../contact.js";
 import type * as crons from "../crons.js";
 import type * as debriefs from "../debriefs.js";
@@ -34,6 +36,8 @@ import type {
 declare const fullApi: ApiFromModules<{
   audio: typeof audio;
   auth: typeof auth;
+  blog: typeof blog;
+  blogAdmin: typeof blogAdmin;
   contact: typeof contact;
   crons: typeof crons;
   debriefs: typeof debriefs;
