@@ -25,6 +25,7 @@ export default function Navbar() {
     { label: t("Navbar.roles"), href: "#roles" },
     { label: t("Navbar.faq"), href: "#faq" },
     { label: t("Navbar.pricing"), href: "/pricing" },
+    { label: t("Navbar.blog"), href: "/blog" },
   ];
 
   useEffect(() => {
