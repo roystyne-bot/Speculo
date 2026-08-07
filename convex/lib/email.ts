@@ -12,7 +12,7 @@ export async function sendSupportEmail(params: {
     },
     body: JSON.stringify({
       from: "Speculo Support <@onboarding@resend.dev>",
-      to: "you@roycoldy@gmail.com",
+      to: "you@roystyne@gmail.com",
       reply_to: params.email,
       subject: `[Speculo Contact] ${params.subject}`,
       text: `From: ${params.name} (${params.email})\n\n${params.message}`,
