@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import { Button } from "@/components/ui/button";
 
 const categoryLabel: Record<string, string> = {
   update: "Update",
@@ -53,6 +54,14 @@ export default function BlogPage() {
               <p className="text-white/30 text-xs mt-3 font-jetbrains-mono">
                 {new Date(post.publishedAt).toLocaleDateString()}
               </p>
+
+              <Button
+                asChild
+                variant="link"
+                className="mt-4 text-[#2FDD79] hover:text-[#2FDD79]/80 font-space-grotesk"
+              >
+                <a href={`/blog/${post.slug}`}>Read More</a>
+              </Button>
             </Link>
           ))}
         </div>
