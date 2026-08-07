@@ -1,5 +1,8 @@
 "use client";
 
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+
 const tiers = [
   {
     name: "Free",
@@ -56,6 +59,14 @@ export default function PricingPage() {
   return (
     <div className="min-h-screen bg-[#0F1115] text-white px-6 py-16">
       <div className="max-w-5xl mx-auto">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 text-white/60 hover:text-[#2FDD79] text-sm font-space-grotesk mb-10 transition-colors"
+        >
+          <ArrowLeft size={16} />
+          Back to Home
+        </Link>
+
         <div className="text-center mb-4">
           <h1 className="font-quicksand text-4xl mb-3">Pricing</h1>
           <p className="text-white/60 font-space-grotesk max-w-md mx-auto">
@@ -82,9 +93,14 @@ export default function PricingPage() {
                 <span className="text-3xl font-jetbrains-mono">{tier.price}</span>
                 <span className="text-white/50 text-sm ml-1">{tier.period}</span>
               </div>
-              <p className="text-white/60 text-sm mb-6 font-space-grotesk">
+              <p className="text-white/60 text-sm mb-2 font-space-grotesk">
                 {tier.description}
               </p>
+              {tier.name === "Pro" && (
+                <p className="text-xs text-[#2FDD79]/80 mb-4 font-space-grotesk line-through">
+                  Job Search Pass — $49 for 3 months
+                </p>
+              )}
 
               <ul className="space-y-2 mb-4 flex-1">
                 {tier.features.map((f) => (
