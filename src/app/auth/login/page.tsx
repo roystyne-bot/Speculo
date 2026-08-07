@@ -130,7 +130,7 @@ export default function LoginPage() {
                         Password
                       </label>
                       
-                      <a href="/forgot-password"
+                      <a href="/Speculo-app/src/app/forgot-password/page.tsx"
                         className="text-[10px] font-sans text-gray-400 dark:text-white/30 hover:text-spring transition-colors"
                       >
                         Forgot password?
