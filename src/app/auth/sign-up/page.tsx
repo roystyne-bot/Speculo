@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 import { useState, useTransition } from "react";
 import { Eye, EyeOff, Loader2, AlertCircle } from "lucide-react";
 import { Quicksand } from "next/font/google";
+import Image from "next/image";
 
 
 const quicksand = Quicksand({ subsets: ["latin"], weight: ["500", "600", "700"] });
@@ -237,6 +238,19 @@ export default function SignUpPage() {
               </span>
               <div className="flex-1 h-px bg-gray-200 dark:bg-[#2A3045]" />
             </div>
+
+              <button
+                        onClick={() =>
+                          authClient.signIn.social({
+                            provider: "google",
+                            callbackURL: "/dashboard",
+                          })
+                        }
+                        className="w-full flex items-center justify-center gap-2 bg-white text-[#0F1115] font-semibold rounded-lg py-3"
+                      >
+                        <Image src="/google-icon.svg" alt="Google icon" className="w-5 h-5" />
+                        Continue with Google
+                      </button>
 
             {/* Sign in link */}
             <p className="text-center text-[12px] text-gray-500 dark:text-gray-400 font-mono">

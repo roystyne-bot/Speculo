@@ -15,7 +15,7 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
   return betterAuth({
     baseURL: siteUrl,
     database: authComponent.adapter(ctx),
-   emailAndPassword: {
+    emailAndPassword: {
       enabled: true,
       requireEmailVerification: false,
       sendResetPassword: async ({ user, url }) => {
@@ -38,29 +38,37 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
         }
       },
     },
-    plugins: [convex({ authConfig })],
-   databaseHooks: {
-  user: {
-    create: {
-      after: async (user) => {
-        if (!("runMutation" in ctx)) {
-          // Hook fired outside an action context — shouldn't happen for
-          // Better Auth's HTTP-driven user creation, but guard anyway
-          // rather than crashing sign-up if it ever does.
-          console.error("ensureUserFromAuth: ctx has no runMutation, skipping");
-          return;
-        }
-
-        await ctx.runMutation(internal.users.ensureUserFromAuth, {
-          authId: user.id,
-          name: user.name ?? "",
-          email: user.email ?? "",
-          image: user.image ?? undefined,
-        });
+    socialProviders: {
+      google: {
+        clientId: process.env.GOOGLE_CLIENT_ID as string,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
       },
     },
-  },
-},
+    plugins: [convex({ authConfig })],
+    databaseHooks: {
+      user: {
+        create: {
+          after: async (user) => {
+            if (!("runMutation" in ctx)) {
+              // Hook fired outside an action context — shouldn't happen for
+              // Better Auth's HTTP-driven user creation, but guard anyway
+              // rather than crashing sign-up if it ever does.
+              console.error(
+                "ensureUserFromAuth: ctx has no runMutation, skipping",
+              );
+              return;
+            }
+
+            await ctx.runMutation(internal.users.ensureUserFromAuth, {
+              authId: user.id,
+              name: user.name ?? "",
+              email: user.email ?? "",
+              image: user.image ?? undefined,
+            });
+          },
+        },
+      },
+    },
   });
 };
 
