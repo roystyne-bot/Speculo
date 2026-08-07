@@ -97,7 +97,7 @@ export default function PricingPage() {
                 {tier.description}
               </p>
               {tier.name === "Pro" && (
-                <p className="text-xs text-[#2FDD79]/80 mb-4 font-space-grotesk line-through">
+                <p className="text-xs text-[#2FDD79]/80 mb-4 font-space-grotesk">
                   Job Search Pass — $49 for 3 months
                 </p>
               )}

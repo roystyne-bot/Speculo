@@ -2,6 +2,8 @@
 import { useAction } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { useState } from "react";
+import Link from "next/dist/client/link";
+import { ArrowLeft } from "lucide-react";
 
 export default function ContactPage() {
   const submitForm = useAction(api.contact.submitContactForm);
@@ -26,6 +28,13 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen bg-[#0F1115] text-white px-6 py-16 flex justify-center">
       <div className="w-full max-w-lg">
+         <Link
+          href="/"
+          className="inline-flex items-center gap-2 text-white/60 hover:text-[#2FDD79] text-sm font-space-grotesk mb-10 transition-colors"
+        >
+          <ArrowLeft size={16} />
+          Back to Home
+        </Link>
         <h1 className="font-quicksand text-3xl mb-2">Contact Support</h1>
         <p className="text-white/60 mb-8 font-space-grotesk text-sm">
           Questions, bugs, feedback — we read everything.
