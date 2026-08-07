@@ -15,9 +15,28 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
   return betterAuth({
     baseURL: siteUrl,
     database: authComponent.adapter(ctx),
-    emailAndPassword: {
+   emailAndPassword: {
       enabled: true,
       requireEmailVerification: false,
+      sendResetPassword: async ({ user, url }) => {
+        const res = await fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            from: "Speculo Support <onboarding@resend.dev>",
+            to: user.email,
+            subject: "Reset your Speculo password",
+            text: `Click the link to reset your password: ${url}`,
+          }),
+        });
+
+        if (!res.ok) {
+          console.error("sendResetPassword failed:", await res.text());
+        }
+      },
     },
     plugins: [convex({ authConfig })],
    databaseHooks: {
