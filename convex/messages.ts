@@ -203,10 +203,15 @@ export const generateNextQuestion = action({
 
     // Cerebras call replaces Groq for question generation — Groq stays
     // for scoring below, unchanged.
-    const raw = await generateWithMistral(system, user);
-    const result: { question: string; tag: string; companyContext: string } =
-      JSON.parse(raw);
+    //const raw = await generateWithMistral(system, user);
+    //const result: { question: string; tag: string; companyContext: string } =
+    //JSON.parse(raw);
 
+    const raw = await generateWithGemini(`${system}\n\n${user}`);
+    const cleaned = raw.replace(/```json|```/g, "").trim();
+    const result: { question: string; tag: string; companyContext: string } =
+      JSON.parse(cleaned);
+      
     await ctx.runMutation(internal.messages._addMessage, {
       sessionId: args.sessionId,
       questionNumber: nextQuestionNumber,
