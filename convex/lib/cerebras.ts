@@ -6,7 +6,7 @@ export async function generateWithCerebras(system: string, user: string): Promis
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      model: "llama-3.3-70b",
+      model: "llama3.1-8b",
       messages: [
         { role: "system", content: system },
         { role: "user", content: user },
