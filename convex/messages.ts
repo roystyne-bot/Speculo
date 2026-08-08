@@ -3,7 +3,7 @@ import { action, mutation, internalMutation, internalQuery, query } from "./_gen
 import { internal } from "./_generated/api";
 import { getOwnedSession } from "./sessions";
 import { callGroqJSON } from "./lib/groq";
-import { generateWithGemini } from "./lib/gemini";
+import { generateWithCerebras } from "./lib/cerebras";
 import { buildQuestionPrompt } from "./prompts/Questionprompt";
 import { buildScoringPrompt } from "./prompts/Scoringprompt";
 
@@ -173,11 +173,10 @@ export const generateNextQuestion = action({
       history,
     });
 
-    // Gemini call replaces Groq for question generation — Groq stays
+    // Cerebras call replaces Groq for question generation — Groq stays
     // for scoring below, unchanged.
-    const raw = await generateWithGemini(`${system}\n\n${user}`);
-    const cleaned = raw.replace(/```json|```/g, "").trim();
-    const result: { question: string; tag: string; companyContext: string } = JSON.parse(cleaned);
+    const raw = await generateWithCerebras(system, user);
+    const result: { question: string; tag: string; companyContext: string } = JSON.parse(raw);
 
     await ctx.runMutation(internal.messages._addMessage, {
       sessionId: args.sessionId,

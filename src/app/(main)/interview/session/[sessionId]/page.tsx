@@ -40,21 +40,26 @@ export default function InterviewSessionPage() {
   const isLoading = session === undefined || messages === undefined;
   const currentMessage = messages?.[messages.length - 1];
   const needsFirstQuestion = !isLoading && messages.length === 0;
-  const waitingForAnswer = currentMessage && currentMessage.answer === undefined;
+  const waitingForAnswer =
+    currentMessage && currentMessage.answer === undefined;
+
+  const hasStartedGeneratingRef = useRef(false);
 
   useEffect(() => {
-    if (needsFirstQuestion && !isGenerating) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (needsFirstQuestion && !hasStartedGeneratingRef.current) {
+      hasStartedGeneratingRef.current = true;
       setIsGenerating(true);
       generateNextQuestion({ sessionId }).finally(() => setIsGenerating(false));
     }
-  }, [needsFirstQuestion, isGenerating, generateNextQuestion, sessionId]);
+  }, [needsFirstQuestion, generateNextQuestion, sessionId]);
 
   const startRecording = async () => {
     setRecordingError(null);
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mimeType = MediaRecorder.isTypeSupported("audio/webm") ? "audio/webm" : "audio/mp4";
+      const mimeType = MediaRecorder.isTypeSupported("audio/webm")
+        ? "audio/webm"
+        : "audio/mp4";
       const recorder = new MediaRecorder(stream, { mimeType });
       audioChunksRef.current = [];
 
@@ -68,11 +73,19 @@ export default function InterviewSessionPage() {
         setIsTranscribing(true);
         try {
           const arrayBuffer = await blob.arrayBuffer();
-          const result = await transcribe({ sessionId, audio: arrayBuffer, mimeType });
-          setAnswerText((prev) => (prev ? `${prev} ${result.text}` : result.text));
+          const result = await transcribe({
+            sessionId,
+            audio: arrayBuffer,
+            mimeType,
+          });
+          setAnswerText((prev) =>
+            prev ? `${prev} ${result.text}` : result.text,
+          );
         } catch (err) {
           console.error("Transcription failed:", err);
-          setRecordingError("Could not transcribe that — try again, or just type your answer.");
+          setRecordingError(
+            "Could not transcribe that — try again, or just type your answer.",
+          );
         } finally {
           setIsTranscribing(false);
         }
@@ -83,7 +96,9 @@ export default function InterviewSessionPage() {
       setIsRecording(true);
     } catch (err) {
       console.error("Microphone access failed:", err);
-      setRecordingError("Microphone access denied or unavailable — you can still type your answer.");
+      setRecordingError(
+        "Microphone access denied or unavailable — you can still type your answer.",
+      );
     }
   };
 
@@ -93,7 +108,8 @@ export default function InterviewSessionPage() {
   };
 
   const handleSubmit = async () => {
-    if (!currentMessage || answerText.trim().length === 0 || isSubmitting) return;
+    if (!currentMessage || answerText.trim().length === 0 || isSubmitting)
+      return;
     setIsSubmitting(true);
     try {
       const score = await submitAnswer({
@@ -139,7 +155,9 @@ export default function InterviewSessionPage() {
     <div className="min-h-screen pt-20 bg-background px-6 py-12 md:px-10">
       <div className="mx-auto max-w-2xl">
         <p className="text-sm text-muted-foreground">
-          {currentMessage ? `Question ${currentMessage.questionNumber} of ${TOTAL_QUESTIONS}` : "Starting..."}
+          {currentMessage
+            ? `Question ${currentMessage.questionNumber} of ${TOTAL_QUESTIONS}`
+            : "Starting..."}
         </p>
 
         {(isGenerating && !currentMessage) || !currentMessage ? (
@@ -147,10 +165,14 @@ export default function InterviewSessionPage() {
         ) : (
           <div className="mt-3 rounded-xl border border-border bg-card p-6">
             <div className="flex items-center justify-between">
-              <p className="text-xs text-spring uppercase tracking-wide">{currentMessage.questionTag}</p>
+              <p className="text-xs text-spring uppercase tracking-wide">
+                {currentMessage.questionTag}
+              </p>
               <SpeakButton text={currentMessage.question} />
             </div>
-            <p className="mt-2 text-lg text-foreground">{currentMessage.question}</p>
+            <p className="mt-2 text-lg text-foreground">
+              {currentMessage.question}
+            </p>
           </div>
         )}
 
@@ -176,12 +198,24 @@ export default function InterviewSessionPage() {
                     : "text-muted-foreground hover:text-foreground hover:bg-secondary")
                 }
               >
-                {isRecording ? <Square size={16} className="text-red-400"/> : <Mic size={16} className="text-spring" />}
+                {isRecording ? (
+                  <Square size={16} className="text-red-400" />
+                ) : (
+                  <Mic size={16} className="text-spring" />
+                )}
               </button>
             </div>
 
-            {isTranscribing && <p className="mt-2 text-xs text-muted-foreground">Transcribing...</p>}
-            {recordingError && <p className="mt-2 text-xs text-muted-foreground">{recordingError}</p>}
+            {isTranscribing && (
+              <p className="mt-2 text-xs text-muted-foreground">
+                Transcribing...
+              </p>
+            )}
+            {recordingError && (
+              <p className="mt-2 text-xs text-muted-foreground">
+                {recordingError}
+              </p>
+            )}
 
             <div className="mt-3 flex justify-end">
               <button
@@ -202,7 +236,9 @@ export default function InterviewSessionPage() {
               <ScorePill label="Clarity" value={lastFeedback.clarity} />
               <ScorePill label="Depth" value={lastFeedback.depth} />
             </div>
-            <p className="mt-4 text-sm text-muted-foreground">{lastFeedback.feedback}</p>
+            <p className="mt-4 text-sm text-muted-foreground">
+              {lastFeedback.feedback}
+            </p>
             <div className="mt-4 flex justify-end">
               <button
                 onClick={handleNext}
@@ -212,8 +248,8 @@ export default function InterviewSessionPage() {
                 {currentMessage!.questionNumber >= TOTAL_QUESTIONS
                   ? "See debrief"
                   : isGenerating
-                  ? "Loading next question..."
-                  : "Next question"}
+                    ? "Loading next question..."
+                    : "Next question"}
               </button>
             </div>
           </div>
