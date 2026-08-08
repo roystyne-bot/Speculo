@@ -1,6 +1,7 @@
 import { v } from "convex/values";
 import { action } from "./_generated/server";
-import { runCode } from "./lib/piston";
+import { runCode } from "./lib/judge0";
+
 
 export const executeCode = action({
   args: {

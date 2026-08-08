@@ -22,6 +22,7 @@ import type * as lib_email from "../lib/email.js";
 import type * as lib_gemini from "../lib/gemini.js";
 import type * as lib_groq from "../lib/groq.js";
 import type * as lib_groqAudio from "../lib/groqAudio.js";
+import type * as lib_judge0 from "../lib/judge0.js";
 import type * as lib_mistral from "../lib/mistral.js";
 import type * as lib_piston from "../lib/piston.js";
 import type * as messages from "../messages.js";
@@ -53,6 +54,7 @@ declare const fullApi: ApiFromModules<{
   "lib/gemini": typeof lib_gemini;
   "lib/groq": typeof lib_groq;
   "lib/groqAudio": typeof lib_groqAudio;
+  "lib/judge0": typeof lib_judge0;
   "lib/mistral": typeof lib_mistral;
   "lib/piston": typeof lib_piston;
   messages: typeof messages;
