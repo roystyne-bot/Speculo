@@ -7,6 +7,7 @@ import { api } from "../../../../../../convex/_generated/api";
 import { Id } from "../../../../../../convex/_generated/dataModel";
 import { Mic, Square } from "lucide-react";
 import { SpeakButton } from "@/components/web/SpeechButton";
+import CodeEditor, { DEFAULT_SNIPPETS } from "@/components/CodeEditor";
 
 const TOTAL_QUESTIONS = 7;
 
@@ -34,6 +35,10 @@ export default function InterviewSessionPage() {
     feedback: string;
   } | null>(null);
 
+  // Code editor state — only relevant for Technical-tagged questions
+  const [codeLanguage, setCodeLanguage] = useState("javascript");
+  const [code, setCode] = useState(DEFAULT_SNIPPETS.javascript);
+
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
 
@@ -42,6 +47,7 @@ export default function InterviewSessionPage() {
   const needsFirstQuestion = !isLoading && messages.length === 0;
   const waitingForAnswer =
     currentMessage && currentMessage.answer === undefined;
+  const isCodingQuestion = currentMessage?.questionTag?.startsWith("Technical");
 
   const hasStartedGeneratingRef = useRef(false);
 
@@ -111,14 +117,24 @@ export default function InterviewSessionPage() {
     if (!currentMessage || answerText.trim().length === 0 || isSubmitting)
       return;
     setIsSubmitting(true);
+
+    // For coding questions, fold the written explanation and the actual
+    // code into one answer string so Groq's scoring prompt sees both —
+    // no schema/prompt changes needed since it already grades a single
+    // `answer` field.
+    const finalAnswer = isCodingQuestion
+      ? `${answerText}\n\n\`\`\`${codeLanguage}\n${code}\n\`\`\``
+      : answerText;
+
     try {
       const score = await submitAnswer({
         sessionId,
         messageId: currentMessage._id,
-        answer: answerText,
+        answer: finalAnswer,
       });
       setLastFeedback(score);
       setAnswerText("");
+      setCode(DEFAULT_SNIPPETS[codeLanguage]);
     } catch (err) {
       console.error("Failed to submit answer:", err);
     } finally {
@@ -139,17 +155,6 @@ export default function InterviewSessionPage() {
       setIsGenerating(false);
     }
   };
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen pt-20 bg-background px-6 py-12 md:px-10">
-        <div className="mx-auto max-w-2xl">
-          <div className="h-4 w-32 bg-secondary rounded animate-pulse" />
-          <div className="mt-6 h-40 rounded-xl border border-border bg-card animate-pulse" />
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen pt-20 bg-background px-6 py-12 md:px-10">
@@ -215,6 +220,17 @@ export default function InterviewSessionPage() {
               <p className="mt-2 text-xs text-muted-foreground">
                 {recordingError}
               </p>
+            )}
+
+            {isCodingQuestion && (
+              <div className="mt-4">
+                <CodeEditor
+                  language={codeLanguage}
+                  code={code}
+                  onLanguageChange={setCodeLanguage}
+                  onCodeChange={setCode}
+                />
+              </div>
             )}
 
             <div className="mt-3 flex justify-end">

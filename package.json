@@ -12,6 +12,7 @@
     "@convex-dev/better-auth": "^0.12.5",
     "@hookform/resolvers": "^5.2.2",
     "@lobehub/icons": "^5.14.0",
+    "@monaco-editor/react": "^4.7.0",
     "@tabler/icons-react": "^3.45.0",
     "axios": "^1.15.2",
     "better-auth": "~1.6.15",
