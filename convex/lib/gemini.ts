@@ -1,4 +1,4 @@
-export async function generateWithGemini(prompt: string, retries = 2): Promise<string> {
+export async function generateWithGemini(prompt: string, retries = 0): Promise<string> {
   const res = await fetch(
     "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent",
     {
