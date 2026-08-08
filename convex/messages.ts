@@ -10,6 +10,7 @@ import { internal } from "./_generated/api";
 import { getOwnedSession } from "./sessions";
 import { callGroqJSON } from "./lib/groq";
 import { generateWithCerebras } from "./lib/cerebras";
+import { generateWithGemini } from "./lib/gemini";
 import { buildQuestionPrompt } from "./prompts/Questionprompt";
 import { buildScoringPrompt } from "./prompts/Scoringprompt";
 import { generateWithMistral } from "./lib/mistral";

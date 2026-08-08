@@ -18,6 +18,7 @@ import type * as debriefs from "../debriefs.js";
 import type * as http from "../http.js";
 import type * as lib_cerebras from "../lib/cerebras.js";
 import type * as lib_email from "../lib/email.js";
+import type * as lib_gemini from "../lib/gemini.js";
 import type * as lib_groq from "../lib/groq.js";
 import type * as lib_groqAudio from "../lib/groqAudio.js";
 import type * as lib_mistral from "../lib/mistral.js";
@@ -46,6 +47,7 @@ declare const fullApi: ApiFromModules<{
   http: typeof http;
   "lib/cerebras": typeof lib_cerebras;
   "lib/email": typeof lib_email;
+  "lib/gemini": typeof lib_gemini;
   "lib/groq": typeof lib_groq;
   "lib/groqAudio": typeof lib_groqAudio;
   "lib/mistral": typeof lib_mistral;
