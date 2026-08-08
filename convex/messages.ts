@@ -1,11 +1,18 @@
 import { v } from "convex/values";
-import { action, mutation, internalMutation, internalQuery, query } from "./_generated/server";
+import {
+  action,
+  mutation,
+  internalMutation,
+  internalQuery,
+  query,
+} from "./_generated/server";
 import { internal } from "./_generated/api";
 import { getOwnedSession } from "./sessions";
 import { callGroqJSON } from "./lib/groq";
 import { generateWithCerebras } from "./lib/cerebras";
 import { buildQuestionPrompt } from "./prompts/Questionprompt";
 import { buildScoringPrompt } from "./prompts/Scoringprompt";
+import { generateWithMistral } from "./lib/mistral";
 
 const TOTAL_QUESTIONS = 7;
 
@@ -32,7 +39,10 @@ export const _addMessage = internalMutation({
     });
 
     if (args.questionNumber === 1) {
-      await ctx.db.patch(args.sessionId, { status: "active", startedAt: Date.now() });
+      await ctx.db.patch(args.sessionId, {
+        status: "active",
+        startedAt: Date.now(),
+      });
     }
 
     return messageId;
@@ -134,17 +144,32 @@ export const skipQuestion = mutation({
 
 export const generateNextQuestion = action({
   args: { sessionId: v.id("sessions") },
-  handler: async (ctx, args): Promise<{ questionNumber: number; question: string; questionTag: string; companyContext?: string }> => {
-    const session = await ctx.runQuery(internal.sessions._getOwnedSessionForAction, {
-      sessionId: args.sessionId,
-    });
+  handler: async (
+    ctx,
+    args,
+  ): Promise<{
+    questionNumber: number;
+    question: string;
+    questionTag: string;
+    companyContext?: string;
+  }> => {
+    const session = await ctx.runQuery(
+      internal.sessions._getOwnedSessionForAction,
+      {
+        sessionId: args.sessionId,
+      },
+    );
 
-    const existing = await ctx.runQuery(internal.messages._listMessagesInternal, {
-      sessionId: args.sessionId,
-    });
+    const existing = await ctx.runQuery(
+      internal.messages._listMessagesInternal,
+      {
+        sessionId: args.sessionId,
+      },
+    );
 
     const lastMessage = existing[existing.length - 1];
-    const hasPendingQuestion = lastMessage && lastMessage.answer === undefined && !lastMessage.skipped;
+    const hasPendingQuestion =
+      lastMessage && lastMessage.answer === undefined && !lastMessage.skipped;
     if (hasPendingQuestion) {
       return {
         questionNumber: lastMessage.questionNumber,
@@ -156,7 +181,9 @@ export const generateNextQuestion = action({
 
     const nextQuestionNumber = existing.length + 1;
     if (nextQuestionNumber > TOTAL_QUESTIONS) {
-      throw new Error("All questions have already been generated for this session");
+      throw new Error(
+        "All questions have already been generated for this session",
+      );
     }
 
     const history = existing
@@ -175,8 +202,9 @@ export const generateNextQuestion = action({
 
     // Cerebras call replaces Groq for question generation — Groq stays
     // for scoring below, unchanged.
-    const raw = await generateWithCerebras(system, user);
-    const result: { question: string; tag: string; companyContext: string } = JSON.parse(raw);
+    const raw = await generateWithMistral(system, user);
+    const result: { question: string; tag: string; companyContext: string } =
+      JSON.parse(raw);
 
     await ctx.runMutation(internal.messages._addMessage, {
       sessionId: args.sessionId,
@@ -201,14 +229,28 @@ export const submitAnswer = action({
     messageId: v.id("messages"),
     answer: v.string(),
   },
-  handler: async (ctx, args): Promise<{ relevance: number; clarity: number; depth: number; feedback: string }> => {
-    const session = await ctx.runQuery(internal.sessions._getOwnedSessionForAction, {
-      sessionId: args.sessionId,
-    });
+  handler: async (
+    ctx,
+    args,
+  ): Promise<{
+    relevance: number;
+    clarity: number;
+    depth: number;
+    feedback: string;
+  }> => {
+    const session = await ctx.runQuery(
+      internal.sessions._getOwnedSessionForAction,
+      {
+        sessionId: args.sessionId,
+      },
+    );
 
-    const existing = await ctx.runQuery(internal.messages._listMessagesInternal, {
-      sessionId: args.sessionId,
-    });
+    const existing = await ctx.runQuery(
+      internal.messages._listMessagesInternal,
+      {
+        sessionId: args.sessionId,
+      },
+    );
     const message = existing.find((m) => m._id === args.messageId);
     if (!message) {
       throw new Error("Question not found for this session");

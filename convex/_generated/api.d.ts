@@ -20,6 +20,7 @@ import type * as lib_cerebras from "../lib/cerebras.js";
 import type * as lib_email from "../lib/email.js";
 import type * as lib_groq from "../lib/groq.js";
 import type * as lib_groqAudio from "../lib/groqAudio.js";
+import type * as lib_mistral from "../lib/mistral.js";
 import type * as messages from "../messages.js";
 import type * as prompts_Questionprompt from "../prompts/Questionprompt.js";
 import type * as prompts_Scoringprompt from "../prompts/Scoringprompt.js";
@@ -47,6 +48,7 @@ declare const fullApi: ApiFromModules<{
   "lib/email": typeof lib_email;
   "lib/groq": typeof lib_groq;
   "lib/groqAudio": typeof lib_groqAudio;
+  "lib/mistral": typeof lib_mistral;
   messages: typeof messages;
   "prompts/Questionprompt": typeof prompts_Questionprompt;
   "prompts/Scoringprompt": typeof prompts_Scoringprompt;
