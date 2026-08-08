@@ -17,6 +17,7 @@ import type * as crons from "../crons.js";
 import type * as debriefs from "../debriefs.js";
 import type * as http from "../http.js";
 import type * as lib_email from "../lib/email.js";
+import type * as lib_gemini from "../lib/gemini.js";
 import type * as lib_groq from "../lib/groq.js";
 import type * as lib_groqAudio from "../lib/groqAudio.js";
 import type * as messages from "../messages.js";
@@ -43,6 +44,7 @@ declare const fullApi: ApiFromModules<{
   debriefs: typeof debriefs;
   http: typeof http;
   "lib/email": typeof lib_email;
+  "lib/gemini": typeof lib_gemini;
   "lib/groq": typeof lib_groq;
   "lib/groqAudio": typeof lib_groqAudio;
   messages: typeof messages;

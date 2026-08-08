@@ -76,6 +76,7 @@ export default defineSchema({
 
     // Raw AI feedback for this specific answer
     feedback: v.optional(v.string()),
+    companyContext: v.optional(v.string()),
 
     answeredAt: v.optional(v.number()), // Date.now() when submitted
     createdAt: v.number(),

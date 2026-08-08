@@ -3,6 +3,7 @@ import { action, mutation, internalMutation, internalQuery, query } from "./_gen
 import { internal } from "./_generated/api";
 import { getOwnedSession } from "./sessions";
 import { callGroqJSON } from "./lib/groq";
+import { generateWithGemini } from "./lib/gemini";
 import { buildQuestionPrompt } from "./prompts/Questionprompt";
 import { buildScoringPrompt } from "./prompts/Scoringprompt";
 
@@ -18,6 +19,7 @@ export const _addMessage = internalMutation({
     questionNumber: v.number(),
     question: v.string(),
     questionTag: v.string(),
+    companyContext: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const messageId = await ctx.db.insert("messages", {
@@ -25,6 +27,7 @@ export const _addMessage = internalMutation({
       questionNumber: args.questionNumber,
       question: args.question,
       questionTag: args.questionTag,
+      companyContext: args.companyContext,
       createdAt: Date.now(),
     });
 
@@ -131,7 +134,7 @@ export const skipQuestion = mutation({
 
 export const generateNextQuestion = action({
   args: { sessionId: v.id("sessions") },
-  handler: async (ctx, args): Promise<{ questionNumber: number; question: string; questionTag: string }> => {
+  handler: async (ctx, args): Promise<{ questionNumber: number; question: string; questionTag: string; companyContext?: string }> => {
     const session = await ctx.runQuery(internal.sessions._getOwnedSessionForAction, {
       sessionId: args.sessionId,
     });
@@ -140,12 +143,6 @@ export const generateNextQuestion = action({
       sessionId: args.sessionId,
     });
 
-    // Idempotency guard — if the last question hasn't been answered or
-    // skipped yet, this is a duplicate call (e.g. React Strict Mode firing
-    // the "generate first question" effect twice), not a genuine request
-    // for the next one. Return the existing pending question instead of
-    // creating a second one, which is what caused the "starts at question 2"
-    // bug — two questions got created, and the UI showed the latest one.
     const lastMessage = existing[existing.length - 1];
     const hasPendingQuestion = lastMessage && lastMessage.answer === undefined && !lastMessage.skipped;
     if (hasPendingQuestion) {
@@ -153,6 +150,7 @@ export const generateNextQuestion = action({
         questionNumber: lastMessage.questionNumber,
         question: lastMessage.question,
         questionTag: lastMessage.questionTag,
+        companyContext: lastMessage.companyContext, // NEW
       };
     }
 
@@ -175,16 +173,26 @@ export const generateNextQuestion = action({
       history,
     });
 
-    const result = await callGroqJSON<{ question: string; tag: string }>(system, user);
+    // Gemini call replaces Groq for question generation — Groq stays
+    // for scoring below, unchanged.
+    const raw = await generateWithGemini(`${system}\n\n${user}`);
+    const cleaned = raw.replace(/```json|```/g, "").trim();
+    const result: { question: string; tag: string; companyContext: string } = JSON.parse(cleaned);
 
     await ctx.runMutation(internal.messages._addMessage, {
       sessionId: args.sessionId,
       questionNumber: nextQuestionNumber,
       question: result.question,
       questionTag: result.tag,
+      companyContext: result.companyContext,
     });
 
-    return { questionNumber: nextQuestionNumber, question: result.question, questionTag: result.tag };
+    return {
+      questionNumber: nextQuestionNumber,
+      question: result.question,
+      questionTag: result.tag,
+      companyContext: result.companyContext,
+    };
   },
 });
 

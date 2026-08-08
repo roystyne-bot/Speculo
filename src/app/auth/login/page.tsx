@@ -202,7 +202,7 @@ export default function LoginPage() {
                 callbackURL: "/dashboard",
               })
             }
-            className="w-full flex items-center justify-center gap-2 bg-white text-[#0F1115] font-semibold rounded-lg py-3"
+            className="w-full flex items-center justify-center border gap-2 bg-white text-[#0F1115] font-semibold rounded-lg py-3 px-6"
           >
             <Image src="/google-icon.svg" alt="Google icon" className="w-5 h-5" />
             Continue with Google
