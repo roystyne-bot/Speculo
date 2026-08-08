@@ -1,6 +1,6 @@
-export async function generateWithGemini(prompt: string): Promise<string> {
+export async function generateWithGemini(prompt: string, retries = 2): Promise<string> {
   const res = await fetch(
-    "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
+    "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent",
     {
       method: "POST",
       headers: {
@@ -13,6 +13,11 @@ export async function generateWithGemini(prompt: string): Promise<string> {
       }),
     }
   );
+
+  if (res.status === 429 && retries > 0) {
+    await new Promise((resolve) => setTimeout(resolve, 5000)); // wait 5s
+    return generateWithGemini(prompt, retries - 1);
+  }
 
   if (!res.ok) {
     throw new Error(`Gemini failed: ${await res.text()}`);
