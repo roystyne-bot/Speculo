@@ -39,6 +39,7 @@ export default function CodeEditor({ language, code, onLanguageChange, onCodeCha
     setOutput(null);
   }
 
+
   async function handleRun() {
     setIsRunning(true);
     setOutput(null);
@@ -71,7 +72,7 @@ export default function CodeEditor({ language, code, onLanguageChange, onCodeCha
           disabled={isRunning}
           className="px-4 py-1.5 bg-spring text-spring-deep text-sm font-semibold rounded-lg hover:bg-spring-pale transition-colors duration-150 disabled:opacity-60"
         >
-          {isRunning ? "Running..." : "Run Code"}
+          {isRunning ? "Code Executing..." : "Run Code"}
         </button>
       </div>
 
