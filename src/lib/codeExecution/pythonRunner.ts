@@ -1,52 +1,66 @@
 
 import type { ExecutionResult } from "./jsRunner";
 
+const PYODIDE_VERSION = "0.26.1";
+const PYODIDE_BASE_URL = `https://cdn.jsdelivr.net/pyodide/v${PYODIDE_VERSION}/full/`;
+
 let pyodideInstance: any = null;
 let pyodideLoading: Promise<any> | null = null;
 
 export type PyodideStatus = "idle" | "loading" | "ready" | "error";
 
-// Simple subscribable status so the UI can react without prop drilling
-type StatusListener = (status: PyodideStatus) => void;
+type StatusListener = (status: PyodideStatus, elapsedMs: number) => void;
 const listeners = new Set<StatusListener>();
 let currentStatus: PyodideStatus = "idle";
+let loadStartTime = 0;
+let progressInterval: ReturnType<typeof setInterval> | null = null;
 
 function setStatus(status: PyodideStatus) {
   currentStatus = status;
-  listeners.forEach((l) => l(status));
+  const elapsed = loadStartTime ? Date.now() - loadStartTime : 0;
+  listeners.forEach((l) => l(status, elapsed));
 }
 
 export function subscribePyodideStatus(listener: StatusListener): () => void {
   listeners.add(listener);
-  listener(currentStatus); // immediately push current state
+  listener(currentStatus, loadStartTime ? Date.now() - loadStartTime : 0);
   return () => listeners.delete(listener);
-}
-
-export function getPyodideStatus(): PyodideStatus {
-  return currentStatus;
 }
 
 async function loadPyodideOnce() {
   if (pyodideInstance) return pyodideInstance;
   if (pyodideLoading) return pyodideLoading;
 
+  loadStartTime = Date.now();
   setStatus("loading");
+
+  // Tick every 500ms purely so the UI can show elapsed seconds while loading
+  progressInterval = setInterval(() => setStatus("loading"), 500);
 
   pyodideLoading = (async () => {
     try {
       if (!(window as any).loadPyodide) {
         await new Promise<void>((resolve, reject) => {
           const script = document.createElement("script");
-          script.src = "https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.js";
+          script.src = `${PYODIDE_BASE_URL}pyodide.js`;
           script.onload = () => resolve();
-          script.onerror = () => reject(new Error("Failed to load Pyodide"));
+          script.onerror = () => reject(new Error("Failed to load Pyodide script"));
           document.head.appendChild(script);
         });
       }
-      pyodideInstance = await (window as any).loadPyodide();
+
+      // Explicit indexURL fixes "K.default.parse is not a function" —
+      // without it, loadPyodide sometimes can't resolve its own asset path
+      // correctly inside bundled/Next.js apps, and loads mismatched files.
+      pyodideInstance = await (window as any).loadPyodide({
+        indexURL: PYODIDE_BASE_URL,
+      });
+
+      if (progressInterval) clearInterval(progressInterval);
       setStatus("ready");
       return pyodideInstance;
     } catch (err) {
+      if (progressInterval) clearInterval(progressInterval);
       setStatus("error");
       pyodideLoading = null; // allow retry
       throw err;
@@ -54,6 +68,10 @@ async function loadPyodideOnce() {
   })();
 
   return pyodideLoading;
+}
+
+export function preloadPython() {
+  loadPyodideOnce().catch(() => {});
 }
 
 export async function runPython(code: string): Promise<ExecutionResult> {
@@ -75,7 +93,6 @@ sys.stdout = io.StringIO()
     }
 
     const output = pyodide.runPython("sys.stdout.getvalue()");
-
     return { output, error, executionTimeMs: performance.now() - start };
   } catch (err: any) {
     return {
@@ -84,12 +101,4 @@ sys.stdout = io.StringIO()
       executionTimeMs: performance.now() - start,
     };
   }
-}
-
-// Preload Python quietly as soon as the user selects it, so by the time
-// they hit "Run" it's already warm (or at least further along).
-export function preloadPython() {
-  loadPyodideOnce().catch(() => {
-    // swallow — runPython will surface the error properly on actual run
-  });
 }

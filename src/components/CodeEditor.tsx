@@ -49,12 +49,16 @@ export default function CodeEditor({
   } | null>(null);
   const [isRunning, setIsRunning] = useState(false);
   const [pyodideStatus, setPyodideStatus] = useState<PyodideStatus>("idle");
+  const [pyodideElapsedSec, setPyodideElapsedSec] = useState(0);
   const [showPythonWarning, setShowPythonWarning] = useState(false);
   const [pythonConfirmed, setPythonConfirmed] = useState(false);
 
   // Track Pyodide's global load status so the button/badge can react
   useEffect(() => {
-    return subscribePyodideStatus(setPyodideStatus);
+    return subscribePyodideStatus((status, elapsedMs) => {
+      setPyodideStatus(status);
+      setPyodideElapsedSec(Math.floor(elapsedMs / 1000));
+    });
   }, []);
 
   useEffect(() => {
@@ -175,8 +179,9 @@ export default function CodeEditor({
 
       {isPreparingRuntime && (
         <div className="px-4 py-2 border-t border-border bg-background text-xs text-muted-foreground">
-          First run for Python takes a few seconds while the runtime loads —
-          it's cached after that.
+          Loading Python runtime
+          {pyodideElapsedSec > 0 ? ` (${pyodideElapsedSec}s)` : ""}... first run
+          only, cached after.
         </div>
       )}
 

@@ -1,6 +1,7 @@
 
 import { runJavaScript } from "./jsRunner";
 import { runPython } from "./pythonRunner";
+import { transpileTypeScript } from "./tsTranspile";
 import type { ExecutionResult } from "./jsRunner";
 
 export type SupportedLanguage = "javascript" | "typescript" | "python";
@@ -12,10 +13,16 @@ export async function runCode(
   switch (language) {
     case "javascript":
     case "typescript":
-      // TS runs as JS here — for real type-checking you'd need
-      // to transpile first (e.g. with a bundled `typescript` package),
-      // but for interview-answer execution, running as JS is enough.
-      return runJavaScript(code);
+      try {
+        const jsCode = await transpileTypeScript(code);
+        return runJavaScript(jsCode);
+      } catch (err: any) {
+        return {
+          output: "",
+          error: `TypeScript compile error: ${err.message}`,
+          executionTimeMs: 0,
+        };
+      }
     case "python":
       return runPython(code);
     default:
