@@ -144,7 +144,7 @@ export const listRecent = query({
           ? session.completedAt - session.startedAt
           : undefined,
       ),
-      status: session.status === "completed" ? "completed" : "in_progress",
+      status: session.status === "completed" ? "completed" : "uncompleted",
       createdAt: session.createdAt,
     }));
   },

@@ -91,6 +91,19 @@
     "series": "Practice streak",
     "recent": "Entretiens récents",
     "duration": "Duration",
-    "completed": "Completed"
+    "completed": "Completed",
+    "uncompleted": "Uncompleted",
+    "scoreTrend": "Score Trend",
+    "aiInsight": "AI insight",
+    "noScoreDrops": "No score drops detected yet — keep practicing to unlock insights.",
+    "scoreDropMessage1": "Your scores on",
+    "scoreDropMessage2": "questions dropped", 
+    "scoreDropMessage3": "this week. Want a focused practice set?",
+    "practiceTopic": "Practice",
+    "topicBreakdown": "Topic breakdown",
+    "topicBreakdownSubtitle": "Questions practiced by category",
+    "avgScoreThisWeek": "Average score this week",
+    "noSessionsYetChart": "Start a session to see your score trend.",
+    "noQuestionsYet": "No questions practiced yet."
   }
 }

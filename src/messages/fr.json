@@ -91,7 +91,20 @@
     "series": "Série d’entraînements",
     "recent": "Entretiens récents",
     "duration": "Durée",
-    "completed": "Terminé"
+    "completed": "Terminé",
+    "uncompleted": "Non terminé",
+    "scoreTrend": "Tendance des scores",
+    "aiInsight": "Analyse IA",
+    "noScoreDrops": "Aucune baisse de score détectée pour l'instant — continuez à vous entraîner pour débloquer des analyses.",
+    "scoreDropMessage1": "Vos scores en ",
+    "scoreDropMessage2": "ont chuté de ", 
+    "scoreDropMessage3": "cette semaine. Voulez-vous un entraînement ciblé ?",
+    "practiceTopic": "S'entraîner sur",
+    "topicBreakdown": "Répartition par thème",
+    "topicBreakdownSubtitle": "Questions pratiquées par catégorie",
+    "avgScoreThisWeek": "Score moyen cette semaine",
+    "noSessionsYetChart": "Terminez une session pour voir votre tendance de score.",
+    "noQuestionsYet": "Aucune question pratiquée pour l'instant."
   },
   "SignUp": {
     "signUp": "S'inscrire",

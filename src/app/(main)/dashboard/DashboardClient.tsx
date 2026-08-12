@@ -188,6 +188,7 @@ function ScoreTrendTooltip({ active, payload, label }: any) {
 }
 
 function ScoreTrendCard() {
+  const { t } = useLanguage();
   const data = useQuery(api.dashboard.getScoreTrend, { limit: 7 });
 
   return (
@@ -195,14 +196,14 @@ function ScoreTrendCard() {
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="flex items-center gap-2 text-base font-medium text-foreground">
           <TrendingUp className="h-4 w-4" style={{ color: COLOR_SPRING }} />
-          Score Trend
+          {t("Dashboard.scoreTrend")}
         </CardTitle>
       </CardHeader>
       <CardContent>
         {data === undefined ? (
           <ChartSkeleton height={220} />
         ) : data.length === 0 ? (
-          <ChartEmptyState message="Complete a session to see your score trend." />
+          <ChartEmptyState message={`${t("Dashboard.noSessionsYetChart")}`} />
         ) : (
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={data} barCategoryGap="28%">
@@ -233,6 +234,7 @@ function ScoreTrendCard() {
 // ============================================================
 
 function AiInsightCard() {
+  const { t } = useLanguage();
   const weakest = useQuery(api.dashboard.getWeakestTopic);
 
   return (
@@ -240,7 +242,7 @@ function AiInsightCard() {
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 text-base font-medium text-foreground">
           <Lightbulb className="h-4 w-4" style={{ color: COLOR_SPRING }} />
-          AI insight
+          {t("Dashboard.aiInsight")}
         </CardTitle>
       </CardHeader>
       <CardContent className="flex flex-1 flex-col justify-between">
@@ -248,20 +250,20 @@ function AiInsightCard() {
           <div className="h-16 animate-pulse rounded-md bg-muted" />
         ) : weakest === null ? (
           <p className="text-sm text-muted-foreground leading-relaxed">
-            No score drops detected yet — keep practicing to unlock insights.
+            {t("Dashboard.noScoreDrops")}
           </p>
         ) : (
           <>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Your scores on <span className="font-medium text-foreground">{weakest.name}</span>{" "}
-              questions dropped {weakest.dropPct}% this week. Want a focused practice set?
+              {t("Dashboard.scoreDropMessage1")}<span className="font-medium text-foreground">{weakest.name}</span>{" "}
+              {t("Dashboard.scoreDropMessage2")} {weakest.dropPct}% {t("Dashboard.scoreDropMessage3")}
             </p>
             <Button
               variant="outline"
               className="mt-4 flex items-center justify-center gap-1 hover:bg-muted"
               style={{ borderColor: COLOR_SPRING, color: COLOR_SPRING }}
             >
-              Practice {weakest.name.toLowerCase()}
+              {t("Dashboard.practiceTopic")} {weakest.name.toLowerCase()}
               <ChevronRight className="h-4 w-4" />
             </Button>
           </>
@@ -280,6 +282,7 @@ function AiInsightCard() {
 const DONUT_PALETTE = [COLOR_SPRING, COLOR_SPRING_DEEP, COLOR_SPRING_PALE, COLOR_ONYX_LIGHT, COLOR_NEUTRAL];
 
 function TopicDonutCard() {
+  const { t } = useLanguage();
   const raw = useQuery(api.dashboard.getTopicBreakdown);
 
   // .map callback receives (item, index) as separate positional args —
@@ -292,8 +295,8 @@ function TopicDonutCard() {
   return (
     <Card className="border-border bg-card">
       <CardHeader className="pb-2">
-        <CardTitle className="text-base font-medium text-foreground">Topic breakdown</CardTitle>
-        <p className="text-xs text-muted-foreground">Questions practiced by category</p>
+        <CardTitle className="text-base font-medium text-foreground">{t("Dashboard.topicBreakdown")}</CardTitle>
+        <p className="text-xs text-muted-foreground">{t("Dashboard.topicBreakdownSubtitle")}</p>
       </CardHeader>
       <CardContent className="flex items-center gap-4">
         {data === undefined ? (
@@ -455,10 +458,10 @@ function RecentSessions({ sessions }: { sessions: SessionRow[] }) {
                       className={
                         session.status === "completed"
                           ? "bg-primary/15 text-primary"
-                          : "bg-secondary/15 text-secondary"
+                          : "bg-red-600 text-red-400"
                       }
                     >
-                      {session.status === "completed" ? t("Dashboard.completed") : "In progress"}
+                      {session.status === "completed" ? t("Dashboard.completed") : t("Dashboard.uncompleted")}
                     </Badge>
                   </TableCell>
                 </TableRow>
@@ -474,11 +477,12 @@ function RecentSessions({ sessions }: { sessions: SessionRow[] }) {
 }
 
 function EmptyState() {
+  const { t } = useLanguage();
   return (
     <div className="flex flex-col items-center justify-center py-10 text-center">
-      <p className="font-serif text-base text-foreground">No interviews yet</p>
+      <p className="font-serif text-base text-foreground">{t("Dashboard.noQuestionsYet")}</p>
       <p className="mt-1 text-sm text-muted-foreground">
-        Start your first mock interview to see your results here.
+       {t("Dashboard.noSessionsYetChart")}
       </p>
     </div>
   );
