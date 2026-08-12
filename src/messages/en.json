@@ -111,6 +111,7 @@
   "title": "Practice reminders",
   "description": "Get a daily nudge to continue your interview practice.",
   "enabled": "Daily reminder enabled",
-  "disable": "Disable reminders"
+  "disable": "Disable reminders",
+  "dailyReminderDisabled": "Daily reminders disabled."
 }
 }

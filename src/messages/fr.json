@@ -111,7 +111,8 @@
   "title": "Rappels de pratique",
   "description": "Recevez un rappel quotidien pour continuer votre entraînement aux entretiens.",
   "enabled": "Rappel quotidien activé",
-  "disable": "Désactiver les rappels"
+  "disable": "Désactiver les rappels",
+  "dailyReminderDisabled": "Rappels quotidiens désactivés."
 },
   "SignUp": {
     "signUp": "S'inscrire",

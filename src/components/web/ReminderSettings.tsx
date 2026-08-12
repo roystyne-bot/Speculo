@@ -78,7 +78,7 @@ export function ReminderSettings() {
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     });
 
-    setMessage(`Daily reminder enabled for ${time}.`);
+    setMessage(`${t("PracticeReminders.enabled")} ${time}.`);
   }
 
   async function disableReminders() {
@@ -91,7 +91,7 @@ export function ReminderSettings() {
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     });
 
-    setMessage("Daily reminders disabled.");
+    setMessage(`${t("PracticeReminders.dailyReminderDisabled")}`);
   }
 
   const isEnabled = reminder?.enabled ?? false;
