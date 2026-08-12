@@ -1,4 +1,4 @@
-// app/dashboard/DashboardClient.tsx
+
 "use client";
 
 import { usePreloadedQuery, Preloaded, useQuery } from "convex/react";
@@ -32,14 +32,12 @@ import { Lightbulb, ChevronRight, TrendingUp } from "lucide-react";
 
 const quicksand = Quicksand({ subsets: ["latin"], weight: ["600", "700"] });
 
-// Brand tokens (from your Tailwind v4 @theme) — used directly since
-// they're already full color values, not HSL triplets like shadcn's
-// default --primary. Swap these if your token names differ.
+
 const COLOR_SPRING = "var(--color-spring)";
 const COLOR_SPRING_PALE = "var(--color-spring-pale)";
 const COLOR_SPRING_DEEP = "var(--color-spring-deep)";
 const COLOR_ONYX_LIGHT = "var(--color-onyx-light)";
-const COLOR_NEUTRAL = "#6B7280"; // fallback gray for "Other" bucket
+const COLOR_NEUTRAL = "#C4A484"; 
 
 type Props = {
   preloadedSessions: Preloaded<typeof api.sessions.listRecent>;
@@ -84,7 +82,7 @@ function DashboardHeader({ username }: { username?: string }) {
     <div className="flex flex-col pt-20 items-start justify-between gap-4 sm:flex-row sm:items-center">
       <div>
         <h1 className={`${quicksand.className} text-3xl font-semibold text-foreground`}>
-          {username ? `Welcome, ${username}` : t("Dashboard.title")}
+          {username ? `${t("Dashboard.welcome")}, ${username}` : t("Dashboard.title")}
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">{t("Dashboard.describe")}</p>
       </div>
@@ -285,8 +283,6 @@ function TopicDonutCard() {
   const { t } = useLanguage();
   const raw = useQuery(api.dashboard.getTopicBreakdown);
 
-  // .map callback receives (item, index) as separate positional args —
-  // destructure them individually, not as one { } object.
   const data = raw?.map((topic, i) => ({
     ...topic,
     fill: DONUT_PALETTE[i % DONUT_PALETTE.length],
@@ -342,6 +338,7 @@ function TopicDonutCard() {
 // ============================================================
 
 function ScoreAreaCard() {
+  const { t } = useLanguage();
   const data = useQuery(api.dashboard.getWeeklyScoreArea);
 
   // .reduce callback receives (accumulator, currentItem) as separate
@@ -355,7 +352,7 @@ function ScoreAreaCard() {
     <Card className="border-border bg-card md:col-span-2">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <div>
-          <p className="text-sm text-muted-foreground">Average score this week</p>
+          <p className="text-sm text-muted-foreground">{t("Dashboard.avgScoreThisWeek")}</p>
           <p className="text-2xl font-semibold text-foreground">
             {data === undefined ? "—" : `${avg}%`}
           </p>

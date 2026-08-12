@@ -2,10 +2,10 @@ import React from "react";
 import { useState } from "react";
 import { Quicksand } from "next/font/google";
 
-
-const quicksand = Quicksand({ subsets: ["latin"], weight: ["500", "600", "700"] });
-
-
+const quicksand = Quicksand({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+});
 
 const FAQS = [
   {
@@ -28,6 +28,10 @@ const FAQS = [
     q: "Is my session data private?",
     a: "Every session, transcript, and score is scoped to your account only. Nothing is shared across users, and nothing trains a model on your answers.",
   },
+  {
+    q: "Are Speculo interviews available in English?",
+    a: "Yes. All Speculo interviews are conducted in English, including the interview questions and AI-generated responses. But future updates will be made",
+  },
 ];
 
 export default function SpeculoFAQ() {
@@ -35,18 +39,16 @@ export default function SpeculoFAQ() {
 
   return (
     <section
-    className={`relative overflow-hidden bg-background px-6 md:px-10 ${quicksand.className}`}
+      className={`relative overflow-hidden bg-background px-6 md:px-10 ${quicksand.className}`}
       style={{
         minHeight: "100vh",
         padding: "72px 20px",
         fontFamily: quicksand.style.fontFamily,
       }}
     >
-      
-
       <div style={{ maxWidth: 720, margin: "0 auto" }}>
         <p
-        className="text-foreground/80 font-semibold tracking-widest uppercase"
+          className="text-foreground/80 font-semibold tracking-widest uppercase"
           style={{
             color: "#2FDD79",
             fontSize: 13,
@@ -78,8 +80,8 @@ export default function SpeculoFAQ() {
             maxWidth: 480,
           }}
         >
-          Everything people ask before their first mock interview, so your
-          first session can just be about the practice.
+          Everything people ask before their first mock interview, so your first
+          session can just be about the practice.
         </p>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
@@ -111,8 +113,13 @@ export default function SpeculoFAQ() {
                   }}
                 >
                   <div
-                  className={`${quicksand.className} text-foreground`}
-                   style={{ display: "flex", gap: 20, alignItems: "flex-start" }}>
+                    className={`${quicksand.className} text-foreground`}
+                    style={{
+                      display: "flex",
+                      gap: 20,
+                      alignItems: "flex-start",
+                    }}
+                  >
                     <span
                       style={{
                         fontSize: 28,
@@ -138,7 +145,9 @@ export default function SpeculoFAQ() {
                   </div>
 
                   <span
-                    className={isOpen ? "" : "text-gray-400 dark:text-[#8A8F98]"}
+                    className={
+                      isOpen ? "" : "text-gray-400 dark:text-[#8A8F98]"
+                    }
                     style={{
                       flexShrink: 0,
                       width: 28,

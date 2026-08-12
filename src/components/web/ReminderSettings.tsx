@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import { useLanguage } from "./LanguageProvider";
 
 function vapidKeyToUint8Array(value: string) {
   const padding = "=".repeat((4 - (value.length % 4)) % 4);
@@ -13,6 +14,7 @@ function vapidKeyToUint8Array(value: string) {
 }
 
 export function ReminderSettings() {
+  const { t } = useLanguage();
   const reminder = useQuery(api.reminders.getMine);
   const saveSubscription = useMutation(api.reminders.saveSubscription);
   const setReminder = useMutation(api.reminders.setReminder);
@@ -97,10 +99,10 @@ export function ReminderSettings() {
   return (
     <section className="rounded-2xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-950">
       <p className="text-sm font-semibold text-zinc-950 dark:text-white">
-        Practice reminders
+        {t("PracticeReminders.title")}
       </p>
       <p className="mt-1 text-sm text-zinc-500">
-        Get a daily nudge to continue your interview practice.
+         {t("PracticeReminders.description")}
       </p>
 
       <div className="mt-4 flex flex-wrap items-center gap-3">
@@ -116,7 +118,7 @@ export function ReminderSettings() {
           onClick={isEnabled ? disableReminders : enableReminders}
           className="rounded-lg bg-[#75F94C] px-4 py-2 text-sm font-bold text-[#111411]"
         >
-          {isEnabled ? "Disable reminders" : "Enable reminders"}
+          {isEnabled ? t("PracticeReminders.disable") : t("PracticeReminders.disable")}
         </button>
       </div>
 
