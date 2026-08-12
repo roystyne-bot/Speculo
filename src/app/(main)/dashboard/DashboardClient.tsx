@@ -1,4 +1,4 @@
-
+// app/dashboard/DashboardClient.tsx
 "use client";
 
 import { usePreloadedQuery, Preloaded, useQuery } from "convex/react";
@@ -31,6 +31,15 @@ import {
 import { Lightbulb, ChevronRight, TrendingUp } from "lucide-react";
 
 const quicksand = Quicksand({ subsets: ["latin"], weight: ["600", "700"] });
+
+// Brand tokens (from your Tailwind v4 @theme) — used directly since
+// they're already full color values, not HSL triplets like shadcn's
+// default --primary. Swap these if your token names differ.
+const COLOR_SPRING = "var(--color-spring)";
+const COLOR_SPRING_PALE = "var(--color-spring-pale)";
+const COLOR_SPRING_DEEP = "var(--color-spring-deep)";
+const COLOR_ONYX_LIGHT = "var(--color-onyx-light)";
+const COLOR_NEUTRAL = "#6B7280"; // fallback gray for "Other" bucket
 
 type Props = {
   preloadedSessions: Preloaded<typeof api.sessions.listRecent>;
@@ -134,10 +143,20 @@ function StatsRow({
 // since Cell is deprecated in recent Recharts versions.
 // ============================================================
 
-function RoundedBar(props: any) {
-  const { x, y, width, height, index, dataLength } = props;
+type RoundedBarProps = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  index: number;
+  dataLength: number;
+};
+
+// `shape` receives ONE props object from Recharts — destructuring here
+// is correct (unlike .map/.reduce callbacks, which get positional args).
+function RoundedBar({ x, y, width, height, index, dataLength }: RoundedBarProps) {
   const isHighlight = index === dataLength - 1;
-  const fill = isHighlight ? "hsl(var(--primary))" : "hsl(var(--primary) / 0.35)";
+  const fill = isHighlight ? COLOR_SPRING : COLOR_SPRING_PALE;
   const r = Math.min(width / 2, 16);
 
   return (
@@ -159,7 +178,10 @@ function RoundedBar(props: any) {
 function ScoreTrendTooltip({ active, payload, label }: any) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="rounded-lg bg-primary text-primary-foreground text-xs font-semibold px-3 py-1.5 shadow-lg">
+    <div
+      className="rounded-lg text-xs font-semibold px-3 py-1.5 shadow-lg"
+      style={{ backgroundColor: COLOR_SPRING, color: COLOR_ONYX_LIGHT }}
+    >
       {label}: {payload[0].value}%
     </div>
   );
@@ -172,7 +194,7 @@ function ScoreTrendCard() {
     <Card className="border-border bg-card">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="flex items-center gap-2 text-base font-medium text-foreground">
-          <TrendingUp className="h-4 w-4 text-primary" />
+          <TrendingUp className="h-4 w-4" style={{ color: COLOR_SPRING }} />
           Score Trend
         </CardTitle>
       </CardHeader>
@@ -217,7 +239,7 @@ function AiInsightCard() {
     <Card className="border-border bg-card flex flex-col justify-between">
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 text-base font-medium text-foreground">
-          <Lightbulb className="h-4 w-4 text-primary" />
+          <Lightbulb className="h-4 w-4" style={{ color: COLOR_SPRING }} />
           AI insight
         </CardTitle>
       </CardHeader>
@@ -236,7 +258,8 @@ function AiInsightCard() {
             </p>
             <Button
               variant="outline"
-              className="mt-4 flex items-center justify-center gap-1 border-primary text-primary hover:bg-primary/10"
+              className="mt-4 flex items-center justify-center gap-1 hover:bg-muted"
+              style={{ borderColor: COLOR_SPRING, color: COLOR_SPRING }}
             >
               Practice {weakest.name.toLowerCase()}
               <ChevronRight className="h-4 w-4" />
@@ -254,17 +277,17 @@ function AiInsightCard() {
 // no <Cell> needed)
 // ============================================================
 
-const DONUT_PALETTE = [
-  "hsl(var(--primary))",
-  "hsl(var(--primary) / 0.75)",
-  "hsl(var(--primary) / 0.55)",
-  "hsl(var(--primary) / 0.35)",
-  "hsl(var(--muted-foreground) / 0.3)",
-];
+const DONUT_PALETTE = [COLOR_SPRING, COLOR_SPRING_DEEP, COLOR_SPRING_PALE, COLOR_ONYX_LIGHT, COLOR_NEUTRAL];
 
 function TopicDonutCard() {
   const raw = useQuery(api.dashboard.getTopicBreakdown);
-  const data = raw?.map((t: any, i: number) => ({ ...t, fill: DONUT_PALETTE[i % DONUT_PALETTE.length] }));
+
+  // .map callback receives (item, index) as separate positional args —
+  // destructure them individually, not as one { } object.
+  const data = raw?.map((topic, i) => ({
+    ...topic,
+    fill: DONUT_PALETTE[i % DONUT_PALETTE.length],
+  }));
 
   return (
     <Card className="border-border bg-card">
@@ -292,12 +315,15 @@ function TopicDonutCard() {
                 />
               </PieChart>
             </ResponsiveContainer>
-            <div className="flex flex-col gap-1.5 text-xs">
-              {data.map((t: any) => (
-                <div key={t.name} className="flex items-center gap-2">
-                  <span className="h-2 w-2 rounded-full" style={{ backgroundColor: t.fill }} />
-                  <span className="text-foreground">{t.name}</span>
-                  <span className="text-muted-foreground">{t.value}%</span>
+            <div className="flex flex-col gap-1.5 text-xs max-h-[140px] overflow-y-auto pr-1">
+              {data.map((topic) => (
+                <div key={topic.name} className="flex items-center gap-2">
+                  <span
+                    className="h-2 w-2 shrink-0 rounded-full"
+                    style={{ backgroundColor: topic.fill }}
+                  />
+                  <span className="text-foreground truncate">{topic.name}</span>
+                  <span className="text-muted-foreground shrink-0">{topic.value}%</span>
                 </div>
               ))}
             </div>
@@ -314,9 +340,12 @@ function TopicDonutCard() {
 
 function ScoreAreaCard() {
   const data = useQuery(api.dashboard.getWeeklyScoreArea);
+
+  // .reduce callback receives (accumulator, currentItem) as separate
+  // positional args — destructure them individually, not as { sum, d }.
   const avg =
     data && data.length
-      ? Math.round(data.reduce((sum: number, d: any) => sum + d.score, 0) / data.length)
+      ? Math.round(data.reduce((sum, day) => sum + day.score, 0) / data.length)
       : 0;
 
   return (
@@ -337,14 +366,14 @@ function ScoreAreaCard() {
             <AreaChart data={data} margin={{ top: 10, right: 0, left: 0, bottom: 0 }}>
               <defs>
                 <linearGradient id="scoreFill" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.35} />
-                  <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity={0} />
+                  <stop offset="0%" stopColor={COLOR_SPRING} stopOpacity={0.35} />
+                  <stop offset="100%" stopColor={COLOR_SPRING} stopOpacity={0} />
                 </linearGradient>
               </defs>
               <Area
                 type="monotone"
                 dataKey="score"
-                stroke="hsl(var(--primary))"
+                stroke={COLOR_SPRING}
                 strokeWidth={2.5}
                 fill="url(#scoreFill)"
               />

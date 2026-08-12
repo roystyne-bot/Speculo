@@ -17,7 +17,7 @@ import { v } from "convex/values";
 import type { Doc, Id } from "./_generated/dataModel";
 
 function parseTopic(questionTag: string): string {
-  const [topic] = questionTag.split("·");
+  const [topic] = questionTag.split(" - ");
   return topic?.trim() || questionTag.trim() || "Other";
 }
 
