@@ -264,7 +264,7 @@ const DONUT_PALETTE = [
 
 function TopicDonutCard() {
   const raw = useQuery(api.dashboard.getTopicBreakdown);
-  const data = raw?.map(({t, i} : any) => ({ ...t, fill: DONUT_PALETTE[i % DONUT_PALETTE.length] }));
+  const data = raw?.map((t: any, i: number) => ({ ...t, fill: DONUT_PALETTE[i % DONUT_PALETTE.length] }));
 
   return (
     <Card className="border-border bg-card">
@@ -293,7 +293,7 @@ function TopicDonutCard() {
               </PieChart>
             </ResponsiveContainer>
             <div className="flex flex-col gap-1.5 text-xs">
-              {data.map(({t}: any) => (
+              {data.map((t: any) => (
                 <div key={t.name} className="flex items-center gap-2">
                   <span className="h-2 w-2 rounded-full" style={{ backgroundColor: t.fill }} />
                   <span className="text-foreground">{t.name}</span>
@@ -316,7 +316,7 @@ function ScoreAreaCard() {
   const data = useQuery(api.dashboard.getWeeklyScoreArea);
   const avg =
     data && data.length
-      ? Math.round(data.reduce(({sum, d}: any) => sum + d.score, 0) / data.length)
+      ? Math.round(data.reduce((sum: number, d: any) => sum + d.score, 0) / data.length)
       : 0;
 
   return (
