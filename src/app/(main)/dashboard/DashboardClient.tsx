@@ -25,7 +25,6 @@ import {
   Tooltip,
   PieChart,
   Pie,
-  Cell,
   AreaChart,
   Area,
 } from "recharts";
@@ -51,9 +50,6 @@ export function DashboardClient({ preloadedSessions, preloadedStats }: Props) {
         <DashboardHeader username={currentUserName ?? undefined} />
         <StatsRow stats={stats} />
 
-        {/* Charts row — TODO: replace mock props with real Convex data
-            (scoreTrend from sessions grouped chronologically,
-             topicBreakdown from messages grouped by question category) */}
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           <div className="md:col-span-2">
             <ScoreTrendCard />
@@ -134,18 +130,31 @@ function StatsRow({
 
 // ============================================================
 // SCORE TREND — rounded-pill bar chart
+// Colors handled via a custom `shape` render prop instead of <Cell>,
+// since Cell is deprecated in recent Recharts versions.
 // ============================================================
 
-// TODO: replace with real data, e.g. useQuery(api.sessions.getScoreTrend)
-const mockScoreTrend = [
-  { label: "S1", value: 52 },
-  { label: "S2", value: 58 },
-  { label: "S3", value: 61 },
-  { label: "S4", value: 55 },
-  { label: "S5", value: 68 },
-  { label: "S6", value: 74 },
-  { label: "S7", value: 79 },
-];
+function RoundedBar(props: any) {
+  const { x, y, width, height, index, dataLength } = props;
+  const isHighlight = index === dataLength - 1;
+  const fill = isHighlight ? "hsl(var(--primary))" : "hsl(var(--primary) / 0.35)";
+  const r = Math.min(width / 2, 16);
+
+  return (
+    <path
+      d={`
+        M${x},${y + r}
+        Q${x},${y} ${x + r},${y}
+        L${x + width - r},${y}
+        Q${x + width},${y} ${x + width},${y + r}
+        L${x + width},${y + height}
+        L${x},${y + height}
+        Z
+      `}
+      fill={fill}
+    />
+  );
+}
 
 function ScoreTrendTooltip({ active, payload, label }: any) {
   if (!active || !payload?.length) return null;
@@ -157,8 +166,7 @@ function ScoreTrendTooltip({ active, payload, label }: any) {
 }
 
 function ScoreTrendCard() {
-  const data = mockScoreTrend;
-  const highlightIndex = data.length - 1; // most recent session highlighted
+  const data = useQuery(api.dashboard.getScoreTrend, { limit: 7 });
 
   return (
     <Card className="border-border bg-card">
@@ -169,38 +177,42 @@ function ScoreTrendCard() {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={220}>
-          <BarChart data={data} barCategoryGap="28%">
-            <XAxis
-              dataKey="label"
-              axisLine={false}
-              tickLine={false}
-              tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }}
-            />
-            <Tooltip content={<ScoreTrendTooltip />} cursor={false} />
-            <Bar dataKey="value" radius={[24, 24, 24, 24]} isAnimationActive>
-              {data.map((entry, i) => (
-                <Cell
-                  key={i}
-                  fill={i === highlightIndex ? "hsl(var(--primary))" : "hsl(var(--primary) / 0.35)"}
-                />
-              ))}
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
+        {data === undefined ? (
+          <ChartSkeleton height={220} />
+        ) : data.length === 0 ? (
+          <ChartEmptyState message="Complete a session to see your score trend." />
+        ) : (
+          <ResponsiveContainer width="100%" height={220}>
+            <BarChart data={data} barCategoryGap="28%">
+              <XAxis
+                dataKey="label"
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }}
+              />
+              <Tooltip content={<ScoreTrendTooltip />} cursor={false} />
+              <Bar
+                dataKey="value"
+                shape={(props: any) => (
+                  <RoundedBar {...props} dataLength={data.length} />
+                )}
+                isAnimationActive
+              />
+            </BarChart>
+          </ResponsiveContainer>
+        )}
       </CardContent>
     </Card>
   );
 }
 
 // ============================================================
-// AI INSIGHT — surfaces the weakest topic from scoring data
+// AI INSIGHT — surfaces the weakest topic from real scoring data
 // ============================================================
 
-// TODO: replace with real weakest-topic detection from Groq scoring history
-const mockWeakestTopic = { name: "Recursion", dropPct: 15 };
-
 function AiInsightCard() {
+  const weakest = useQuery(api.dashboard.getWeakestTopic);
+
   return (
     <Card className="border-border bg-card flex flex-col justify-between">
       <CardHeader className="pb-2">
@@ -210,36 +222,50 @@ function AiInsightCard() {
         </CardTitle>
       </CardHeader>
       <CardContent className="flex flex-1 flex-col justify-between">
-        <p className="text-sm text-muted-foreground leading-relaxed">
-          Your scores on <span className="font-medium text-foreground">{mockWeakestTopic.name}</span>{" "}
-          questions dropped {mockWeakestTopic.dropPct}% this week. Want a focused practice set?
-        </p>
-        <Button
-          variant="outline"
-          className="mt-4 flex items-center justify-center gap-1 border-primary text-primary hover:bg-primary/10"
-        >
-          Practice {mockWeakestTopic.name.toLowerCase()}
-          <ChevronRight className="h-4 w-4" />
-        </Button>
+        {weakest === undefined ? (
+          <div className="h-16 animate-pulse rounded-md bg-muted" />
+        ) : weakest === null ? (
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            No score drops detected yet — keep practicing to unlock insights.
+          </p>
+        ) : (
+          <>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Your scores on <span className="font-medium text-foreground">{weakest.name}</span>{" "}
+              questions dropped {weakest.dropPct}% this week. Want a focused practice set?
+            </p>
+            <Button
+              variant="outline"
+              className="mt-4 flex items-center justify-center gap-1 border-primary text-primary hover:bg-primary/10"
+            >
+              Practice {weakest.name.toLowerCase()}
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </>
+        )}
       </CardContent>
     </Card>
   );
 }
 
 // ============================================================
-// TOPIC DONUT — rounded end caps
+// TOPIC DONUT — rounded end caps, colors via per-datum `fill` field
+// (Recharts reads each data object's own `fill` key automatically,
+// no <Cell> needed)
 // ============================================================
 
-// TODO: replace with real topic distribution from messages grouped by category
-const mockTopicBreakdown = [
-  { name: "Arrays & Strings", value: 35, color: "hsl(var(--primary))" },
-  { name: "System Design", value: 22, color: "hsl(var(--primary) / 0.7)" },
-  { name: "Behavioral", value: 18, color: "hsl(var(--primary) / 0.5)" },
-  { name: "Recursion", value: 15, color: "hsl(var(--primary) / 0.3)" },
-  { name: "Other", value: 10, color: "hsl(var(--muted-foreground) / 0.3)" },
+const DONUT_PALETTE = [
+  "hsl(var(--primary))",
+  "hsl(var(--primary) / 0.75)",
+  "hsl(var(--primary) / 0.55)",
+  "hsl(var(--primary) / 0.35)",
+  "hsl(var(--muted-foreground) / 0.3)",
 ];
 
 function TopicDonutCard() {
+  const raw = useQuery(api.dashboard.getTopicBreakdown);
+  const data = raw?.map(({t, i} : any) => ({ ...t, fill: DONUT_PALETTE[i % DONUT_PALETTE.length] }));
+
   return (
     <Card className="border-border bg-card">
       <CardHeader className="pb-2">
@@ -247,81 +273,107 @@ function TopicDonutCard() {
         <p className="text-xs text-muted-foreground">Questions practiced by category</p>
       </CardHeader>
       <CardContent className="flex items-center gap-4">
-        <ResponsiveContainer width={140} height={140}>
-          <PieChart>
-            <Pie
-              data={mockTopicBreakdown}
-              dataKey="value"
-              innerRadius={42}
-              outerRadius={62}
-              paddingAngle={4}
-              cornerRadius={12}
-              stroke="none"
-            >
-              {mockTopicBreakdown.map((entry, i) => (
-                <Cell key={i} fill={entry.color} />
+        {data === undefined ? (
+          <ChartSkeleton height={140} width={140} />
+        ) : data.length === 0 ? (
+          <ChartEmptyState message="No questions practiced yet." />
+        ) : (
+          <>
+            <ResponsiveContainer width={140} height={140}>
+              <PieChart>
+                <Pie
+                  data={data}
+                  dataKey="value"
+                  innerRadius={42}
+                  outerRadius={62}
+                  paddingAngle={4}
+                  cornerRadius={12}
+                  stroke="none"
+                />
+              </PieChart>
+            </ResponsiveContainer>
+            <div className="flex flex-col gap-1.5 text-xs">
+              {data.map(({t}: any) => (
+                <div key={t.name} className="flex items-center gap-2">
+                  <span className="h-2 w-2 rounded-full" style={{ backgroundColor: t.fill }} />
+                  <span className="text-foreground">{t.name}</span>
+                  <span className="text-muted-foreground">{t.value}%</span>
+                </div>
               ))}
-            </Pie>
-          </PieChart>
-        </ResponsiveContainer>
-        <div className="flex flex-col gap-1.5 text-xs">
-          {mockTopicBreakdown.map((t) => (
-            <div key={t.name} className="flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full" style={{ backgroundColor: t.color }} />
-              <span className="text-foreground">{t.name}</span>
-              <span className="text-muted-foreground">{t.value}%</span>
             </div>
-          ))}
-        </div>
+          </>
+        )}
       </CardContent>
     </Card>
   );
 }
 
 // ============================================================
-// SCORE AREA CHART — weekly average trend
+// SCORE AREA CHART — real per-day average, last 7 days
 // ============================================================
 
-// TODO: replace with real per-day average score from sessions this week
-const mockAreaData = [
-  { day: "Mon", score: 55 },
-  { day: "Tue", score: 62 },
-  { day: "Wed", score: 58 },
-  { day: "Thu", score: 70 },
-  { day: "Fri", score: 66 },
-  { day: "Sat", score: 76 },
-  { day: "Sun", score: 79 },
-];
-
 function ScoreAreaCard() {
+  const data = useQuery(api.dashboard.getWeeklyScoreArea);
+  const avg =
+    data && data.length
+      ? Math.round(data.reduce(({sum, d}: any) => sum + d.score, 0) / data.length)
+      : 0;
+
   return (
     <Card className="border-border bg-card md:col-span-2">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <div>
           <p className="text-sm text-muted-foreground">Average score this week</p>
-          <p className="text-2xl font-semibold text-foreground">79%</p>
+          <p className="text-2xl font-semibold text-foreground">
+            {data === undefined ? "—" : `${avg}%`}
+          </p>
         </div>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={100}>
-          <AreaChart data={mockAreaData} margin={{ top: 10, right: 0, left: 0, bottom: 0 }}>
-            <defs>
-              <linearGradient id="scoreFill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.35} />
-                <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity={0} />
-              </linearGradient>
-            </defs>
-            <Area
-              type="monotone"
-              dataKey="score"
-              stroke="hsl(var(--primary))"
-              strokeWidth={2.5}
-              fill="url(#scoreFill)"
-            />
-          </AreaChart>
-        </ResponsiveContainer>
+        {data === undefined ? (
+          <ChartSkeleton height={100} />
+        ) : (
+          <ResponsiveContainer width="100%" height={100}>
+            <AreaChart data={data} margin={{ top: 10, right: 0, left: 0, bottom: 0 }}>
+              <defs>
+                <linearGradient id="scoreFill" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.35} />
+                  <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <Area
+                type="monotone"
+                dataKey="score"
+                stroke="hsl(var(--primary))"
+                strokeWidth={2.5}
+                fill="url(#scoreFill)"
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        )}
       </CardContent>
     </Card>
+  );
+}
+
+// ============================================================
+// Shared small helpers
+// ============================================================
+
+function ChartSkeleton({ height, width }: { height: number; width?: number }) {
+  return (
+    <div
+      className="animate-pulse rounded-md bg-muted"
+      style={{ height, width: width ?? "100%" }}
+    />
+  );
+}
+
+function ChartEmptyState({ message }: { message: string }) {
+  return (
+    <div className="flex h-full min-h-[100px] w-full items-center justify-center text-center text-xs text-muted-foreground">
+      {message}
+    </div>
   );
 }
 

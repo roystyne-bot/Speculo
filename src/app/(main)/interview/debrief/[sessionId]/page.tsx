@@ -33,7 +33,7 @@ export default function DebriefPage() {
 
   if (isLoading || isGenerating) {
     return (
-      <div className="min-h-screen bg-background px-6 py-12 md:px-10">
+      <div className="min-h-screen bg-background pt-20 px-6 py-12 md:px-10">
         <div className="mx-auto max-w-2xl space-y-4">
           <div className="h-6 w-40 bg-gray-800 rounded animate-pulse" />
           <div className="h-24 rounded-xl border border-gray-700 bg-onyx-light animate-pulse" />
@@ -45,7 +45,7 @@ export default function DebriefPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-background pt-20 px-6 py-12 md:px-10">
+      <div className="min-h-screen bg-background px-6 py-12 md:px-10">
         <div className="mx-auto max-w-2xl">
           <p className="text-sm text-gray-400">Something went wrong generating your debrief.</p>
           <p className="mt-1 text-xs text-gray-600">{error}</p>

@@ -209,7 +209,7 @@ export default function LoginPage() {
           </button>
 
           {/* Sign up link */}
-          <p className="text-center text-[12px] text-gray-500 dark:text-gray-400">
+          <p className="text-center text-[12px] text-gray-500 mt-2 dark:text-gray-400">
             {`Don't have an account?`}{" "}
             <a
               href="/auth/sign-up"
