@@ -118,7 +118,7 @@ export function ReminderSettings() {
           onClick={isEnabled ? disableReminders : enableReminders}
           className="rounded-lg bg-[#75F94C] px-4 py-2 text-sm font-bold text-[#111411]"
         >
-          {isEnabled ? t("PracticeReminders.disable") : t("PracticeReminders.disable")}
+          {isEnabled ? t("PracticeReminders.disable") : t("PracticeReminders.enabled")}
         </button>
       </div>
 

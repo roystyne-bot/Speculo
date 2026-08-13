@@ -455,7 +455,7 @@ function RecentSessions({ sessions }: { sessions: SessionRow[] }) {
                       className={
                         session.status === "completed"
                           ? "bg-primary/15 text-primary"
-                          : "bg-red-600 text-red-400"
+                          : "bg-red-950/60 text-red-400"
                       }
                     >
                       {session.status === "completed" ? t("Dashboard.completed") : t("Dashboard.uncompleted")}
