@@ -1,7 +1,34 @@
-"use client";
+
 
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Pricing — Speculo",
+  description:
+    "Speculo is free during beta. Practice unlimited mock interviews with AI feedback, company-tagged questions, and performance analytics coming soon.",
+  alternates: {
+    canonical: "https://speculo-two.vercel.app/pricing",
+  },
+  openGraph: {
+    title: "Speculo Pricing",
+    description:
+      "Free during beta. See what's coming with Pro and Team plans for AI-powered mock interview prep.",
+    url: "https://speculo-two.vercel.app/pricing",
+    siteName: "Speculo",
+    images: ["/og-image.png"],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Speculo Pricing",
+    description:
+      "Free during beta. Unlimited mock interviews with AI feedback — Pro and Team plans coming soon.",
+    images: ["/og-image.png"],
+  },
+};
+
 
 const tiers = [
   {

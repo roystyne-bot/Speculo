@@ -1,13 +1,17 @@
+"use client"
+
+
 import React from "react";
 import { useState } from "react";
 import { Quicksand } from "next/font/google";
+
 
 const quicksand = Quicksand({
   subsets: ["latin"],
   weight: ["500", "600", "700"],
 });
 
-const FAQS = [
+export const FAQS = [
   {
     q: "How does Speculo generate interview questions?",
     a: "Every session is built live from your target role and resume — Speculo pulls relevant technical and behavioral questions through Groq's LLM, so no two sessions repeat the same script.",
