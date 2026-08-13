@@ -201,11 +201,7 @@ export const generateNextQuestion = action({
       history,
     });
 
-    // Cerebras call replaces Groq for question generation — Groq stays
-    // for scoring below, unchanged.
-    //const raw = await generateWithMistral(system, user);
-    //const result: { question: string; tag: string; companyContext: string } =
-    //JSON.parse(raw);
+    //I replaced cerebras call with Gemini for question generattion
 
     const raw = await generateWithGemini(`${system}\n\n${user}`);
     const cleaned = raw.replace(/```json|```/g, "").trim();

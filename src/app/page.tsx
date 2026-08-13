@@ -11,7 +11,7 @@ import { DottedSurface } from "./Dottedsurface";
 import { Mic, MessagesSquare, Target, TrendingUp } from "lucide-react";
 import FeatureRow from "../components/web/FeatureRow";
 import TakeAction from "../components/web/TakeAction";
-import FAQPage from "@/components/web/faq/page";
+import FAQPage from "@/app/faq/page";
 import Footer from "./Footer";
 
 const quicksand = Quicksand({ subsets: ["latin"], weight: ["500", "600", "700"] });

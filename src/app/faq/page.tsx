@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import SpeculoFAQ, { FAQS } from "./FAQ";
+import SpeculoFAQ, { FAQS } from "../../components/web/FAQ";
 
 export const metadata: Metadata = {
   title: "FAQ — Speculo",
