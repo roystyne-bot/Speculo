@@ -27,6 +27,9 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://speculo-two.vercel.app"), // ← replace
+  verification: {
+    google: "HAfsILOFBedTwFbS9N14g426BYnl2R-NvMec2_sEbOE",
+  },
   title: {
     default: "Speculo — AI Mock Interview Practice",
     template: "%s | Speculo",
