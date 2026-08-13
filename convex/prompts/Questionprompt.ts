@@ -1,4 +1,4 @@
-// convex/prompts/questionPrompt.ts
+
 
 type PriorQA = { question: string; answer: string };
 

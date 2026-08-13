@@ -62,6 +62,23 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const orgJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Speculo",
+    url: "https://speculo-two.vercel.app",
+    logo: "https://speculo-two.vercel.app/icon.svg",
+    description:
+      "AI-powered mock interview platform offering technical, system design, and behavioral interview practice with real-time scoring.",
+  };
+
+  const websiteJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Speculo",
+    url: "https://speculo-two.vercel.app",
+  };
+
   return (
     <html
       lang="en"
@@ -75,6 +92,14 @@ export default function RootLayout({
       )}
     >
       <body className={`${quicksand.className} min-h-full flex flex-col`}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+        />
         <ThemeProvider>
           <ConvexClientProvider>
             <LanguageProvider>{children}</LanguageProvider>
