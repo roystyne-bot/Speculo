@@ -11,7 +11,7 @@ import { DottedSurface } from "./Dottedsurface";
 import { Mic, MessagesSquare, Target, TrendingUp } from "lucide-react";
 import FeatureRow from "../components/web/FeatureRow";
 import TakeAction from "../components/web/TakeAction";
-import FAQPage from "@/app/faq/page";
+import SpeculoFAQ from "@/components/web/FAQ";
 import Footer from "./Footer";
 
 const quicksand = Quicksand({ subsets: ["latin"], weight: ["500", "600", "700"] });
@@ -160,7 +160,7 @@ function RolesCarouselSection() {
 function SpeculoFAQSection() {
   return(
     <div id="faq">
-    <FAQPage />
+    <SpeculoFAQ />
     </div>
   )
 }
