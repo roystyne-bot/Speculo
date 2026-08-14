@@ -14,17 +14,16 @@ interface FeatureRowProps {
 
 export default function FeatureRow({ title, description, icon, reverse }: FeatureRowProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const [inView, setInView] = useState(false);
+  // Default visible: no-JS clients and crawlers see full content immediately.
+  const [inView, setInView] = useState(true);
   const [reducedMotion, setReducedMotion] = useState(false);
 
   useEffect(() => {
     const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setReducedMotion(prefersReduced);
 
-    // Users with this preference get the final revealed state immediately,
-    // with no animation and no observer — motion isn't just an aesthetic
-    // choice for them, it can cause real discomfort.
     if (prefersReduced) {
       setInView(true);
       return;
@@ -33,11 +32,21 @@ export default function FeatureRow({ title, description, icon, reverse }: Featur
     const el = ref.current;
     if (!el) return;
 
-    // No disconnect() here, and no isIntersecting guard — this is what
-    // makes it re-trigger every time the section enters or leaves the
-    // viewport, rather than firing once and staying revealed forever.
+    // Only start to the reveal animation if the element isn't already
+    // visible on load, otherwise leave it in its default visible state.
+    const rect = el.getBoundingClientRect();
+    const alreadyVisible = rect.top < window.innerHeight && rect.bottom > 0;
+    if (!alreadyVisible) {
+      setInView(false);
+    }
+
     const observer = new IntersectionObserver(
-      ([entry]) => setInView(entry.isIntersecting),
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.disconnect(); // fire once, then stop — matches your comment's original intent
+        }
+      },
       { threshold: 0.2 },
     );
     observer.observe(el);
@@ -77,9 +86,6 @@ export default function FeatureRow({ title, description, icon, reverse }: Featur
           transition,
         }}
       >
-        {/* Icon tile stays brand spring green in both themes on purpose —
-            same reasoning as buttons/logo elsewhere: brand accents don't
-            flip with the theme, only surfaces and text do. */}
         <div className="w-48 h-48 md:w-56 md:h-56 rounded-3xl flex items-center justify-center bg-spring">
           {icon}
         </div>
